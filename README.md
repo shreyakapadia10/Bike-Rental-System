@@ -5,4 +5,4 @@ It has 3 users:
 2. BikeOperator
 3. Admin
 
-bike user can rant a bike.
+bike user can rent a bike.
