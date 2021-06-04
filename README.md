@@ -8,3 +8,4 @@ It has 3 users:
 bike user can rent a bike.
 bike operator can give bike for rent.
 admin can approve user and operator.
+bike operator station can be traced to google map. 
