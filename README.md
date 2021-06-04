@@ -6,3 +6,4 @@ It has 3 users:
 3. Admin
 
 bike user can rent a bike.
+bike operator can give bike for rent.
