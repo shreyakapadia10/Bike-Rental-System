@@ -4,3 +4,5 @@ It has 3 users:
 1. BikeUser
 2. BikeOperator
 3. Admin
+
+bike user can rant a bike.
