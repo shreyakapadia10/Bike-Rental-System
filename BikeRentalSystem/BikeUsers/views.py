@@ -1,43 +1,60 @@
-from django.contrib import auth
-from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import CustomerLoginForm, CustomerRegisterForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.messages.api import success
+from django.shortcuts import redirect, render
+from .forms import CustomerCreationForm, CustomerLoginForm
 from django.contrib.auth import login, authenticate
-from .models import Customer
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from django.contrib.auth import views as auth_view
 
 # Create your views here.
-def register(request):
-    if request.method == 'POST':
-        form = CustomerRegisterForm(request.POST, request.FILES)
+# def register(request):
+#     if request.method == 'POST':
+#         form = CustomerRegisterForm(request.POST, request.FILES)
         
-        if form.is_valid():
-            form.save()
-            messages.success(request=request, message=f'Registered Successfully!')
-            return redirect('CustomerRegister')    
-        return render(request, 'BikeUsers/login.html', {'form': form})
-    form = CustomerRegisterForm()
-    return render(request, 'BikeUsers/register.html', {'form': form})
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request=request, message=f'Registered Successfully!')
+#             return redirect('CustomerRegister')    
+#         return render(request, 'BikeUsers/login.html', {'form': form})
+#     form = CustomerRegisterForm()
+#     return render(request, 'BikeUsers/register.html', {'form': form})
 
 
-def customer_login(request):
-    if request.method == "POST":
-        form = CustomerLoginForm(request.POST)
+# def SignIn(request):
+#     if request.method == "POST":
+#         form = AuthenticationForm(request=request.POST)
 
-        email = request.POST['email']
-        password = request.POST['password']
+#         username = request.POST['username']
+#         password = request.POST['password']
         
-        try:
-            Customer.objects.get(email=email, password=password)
-            messages.success(request=request, message=f'Logged in Successfully!')
-            return redirect('CustomerHome')
-                
-        except Customer.DoesNotExist:
-            messages.warning(request=request, message=f'Invalid email or password!')
-            return render(request, 'BikeUsers/login.html', {'form': form})
-
-    form = CustomerLoginForm()
-    return render(request, 'BikeUsers/login.html', {'form': form})
-
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request, user)
+#             return redirect('CustomerHome')
+#         else:
+#            messages.warning(request=request, message='Please check your credentials again!')
+#     form = AuthenticationForm()
+#     return render(request=request, template_name='BikeUsers/login.html', context={'form': form})
 
 def home(request):
-    return render(request, 'BikeUsers/index.html')
+    if request.user.is_authenticated:
+        return render(request, 'BikeUsers/index.html')
+    else:
+        return redirect('CustomerLogin')
+
+
+class SignUpView(CreateView):
+    form_class = CustomerCreationForm
+    success_url = reverse_lazy('CustomerLogin')
+    template_name = 'BikeUsers/register.html'
+    success_message = 'Registered Successfully! You can now login with your username!'
+
+
+class SignIn(auth_view.LoginView):
+    form_class = CustomerLoginForm
+    success_url = reverse_lazy('CustomerHome')
+    template_name = 'BikeUsers/login.html'
+    success_message = 'Logged in successfully!'
+    redirect_authenticated_user = True

@@ -126,3 +126,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+AUTH_USER_MODEL = 'BikeUsers.Customer' # new
+
+LOGIN_REDIRECT_URL = 'CustomerHome'
+LOGOUT_REDIRECT_URL = 'CustomerLogin'

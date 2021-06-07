@@ -11,15 +11,21 @@
   <h1 class="text-center">Login!</h1>
   <div class="col-md-6">
 
-    <!-- To print warning/success alert -->
-    {% if messages %}
+    <!-- To print any error for form validation -->
+    {% if form.errors %}
+      {% for field in form %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger">
+          <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+     {% endfor %}
 
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-      <strong>{{ message }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
+     {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+          <strong>{{ error|escape }}</strong>
+        </div>
+      {% endfor %}
     {% endif %}
 
     <!-- Printing Form fields -->
@@ -46,5 +52,5 @@
 {% endblock content %}
 
 {% block js %}
-<script src="{% static 'script.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock js %}
