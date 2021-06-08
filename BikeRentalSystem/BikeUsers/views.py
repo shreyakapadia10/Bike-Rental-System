@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.messages.api import success
 from django.shortcuts import redirect, render
-from .forms import CustomerCreationForm, CustomerLoginForm
+from .forms import CustomerCreationForm, CustomerLoginForm,BikeRegistrationForm
 from django.contrib.auth import login, authenticate
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
@@ -58,3 +58,9 @@ class SignIn(auth_view.LoginView):
     template_name = 'BikeUsers/login.html'
     success_message = 'Logged in successfully!'
     redirect_authenticated_user = True
+
+class BikeAddView(CreateView):
+    form_class = BikeRegistrationForm
+    success_url = reverse_lazy('CustomerLogin')
+    template_name = 'BikeUsers/bikeadd.html'
+    

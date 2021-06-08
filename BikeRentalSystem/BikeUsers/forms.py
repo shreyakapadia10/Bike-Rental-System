@@ -1,5 +1,5 @@
 from django import forms
-from .models import Customer
+from .models import Customer, bike
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 
 class CustomerCreationForm(UserCreationForm):
@@ -14,6 +14,18 @@ class CustomerCreationForm(UserCreationForm):
         super(CustomerCreationForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+
+
+class BikeRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = bike
+        fields = '__all__'
+    def __init__(self, *args, **kwargs):
+        super(BikeRegistrationForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
 
 
 class CustomerLoginForm(AuthenticationForm):

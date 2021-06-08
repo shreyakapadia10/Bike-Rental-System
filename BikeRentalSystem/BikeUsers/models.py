@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-
 # Create your models here.
 class State(models.Model):
     name = models.CharField(max_length=50)
@@ -34,3 +33,21 @@ class Customer(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} ({self.email})"
+
+class bike(models.Model):
+    BIKE_STATUS_CHOICES = [('W', 'Working'), ('N', 'Non-Working')] 
+    operatorid = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, help_text='Enter operator id')
+    bikename = models.CharField(max_length=50, help_text='Enter bike name')
+    brandname = models.CharField(max_length=50, help_text='Enter bike brand name')
+    price_hr = models.IntegerField(help_text='Enter bike price per hour')
+    price_day = models.IntegerField(help_text='Enter bike price per day', null=True)
+    registered_no = models.CharField(max_length=50, help_text='Enter bike registered number')
+    bike_image=models.ImageField(upload_to='bike_image', help_text='Add bike image', null=True)
+    bike_manufactured_date=models.DateField(help_text='Add Manufactured date of bike')
+    bikecolor = models.CharField(max_length=50, help_text='Enter bike color')
+    bikestatus = models.CharField(choices=BIKE_STATUS_CHOICES, max_length=1, default='W')
+    station_id = models.IntegerField(help_text='Enter bike Station id')
+    
+    def __str__(self) -> str:
+        return f" {self.bikename} ({self.brandname})"
+
