@@ -1,5 +1,5 @@
 from django import forms
-from .models import Customer
+from .models import Customer, Station
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 
 class CustomerCreationForm(UserCreationForm):
@@ -36,29 +36,19 @@ class CustomerChangeForm(UserChangeForm):
         exclude = ('status', )
 
 
-# class CustomerRegisterForm(forms.ModelForm):
-#     password = forms.CharField(widget=forms.PasswordInput, help_text='Enter new password')
-#     class Meta:
-#         model = Customer
-#         fields = ['first_name', 'last_name', 'contact', 'address', 'pincode', 'email', 'password', 'proof']
+class MapsForm(forms.ModelForm):
+    address = forms.CharField(max_length=100, required=True)
+    district = forms.CharField(max_length=100, required=True)
+    post_code = forms.CharField(max_length=8, required=True)
+    country = forms.CharField(max_length=40, required=True)
+    longitude = forms.CharField(max_length=50, required=True)
+    latitude = forms.CharField(max_length=50, required=True)
 
-#     def __init__(self, *args, **kwargs):
-#         super(CustomerRegisterForm, self).__init__(*args, **kwargs)
-#         for visible in self.visible_fields():
-#             visible.field.widget.attrs['class'] = 'form-control'
+    class Meta:
+        model = Station
+        fields = ('address', 'district', 'post_code', 'country', 'longitude', 'latitude')
 
-
-# class CustomerLoginForm(forms.ModelForm):
-#     email = forms.EmailField(help_text='Enter your email')
-#     password = forms.CharField(widget=forms.PasswordInput, help_text='Enter your password')
-
-#     class Meta:
-#         model = Customer
-#         fields = ['email', 'password']
-
-#     def __init__(self, *args, **kwargs):
-#         super(CustomerLoginForm, self).__init__(*args, **kwargs)
-#         for visible in self.visible_fields():
-#             visible.field.widget.attrs['class'] = 'form-control'
-
-#     USERNAME_FIELD = 'email'
+    def __init__(self, *args, **kwargs):
+        super(MapsForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'

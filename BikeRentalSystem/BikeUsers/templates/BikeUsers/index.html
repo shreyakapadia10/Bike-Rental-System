@@ -1,6 +1,5 @@
 {% extends 'BikeUsers/base.html' %}
 {% load static %}
-{% load easy_maps_tags %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
@@ -32,12 +31,12 @@
 </div>
 
 <div class="maps">
-    <!-- Default map with 300x400 dimensions -->
-    {% easy_map "Russia, Ekaterinburg, Mira 32" 300 400 %}
-
+    <form method="POST" action="">{% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+    </form>
 </div>
 {% endblock content %}
 
 {% block js %}
-
 {% endblock js %}
