@@ -1,7 +1,7 @@
 {% extends 'BikeUsers/base.html' %}
 {% load static %}
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 {% block content %}
 <!-- To print warning/success alert -->
@@ -16,7 +16,7 @@
 {% endif %}
 
 {% if user.is_authenticated %}
-    <h1>Welcome, {{user.username}}! </h1>
+<h1>Welcome, {{user.username}}! </h1>
 {% endif %}
 
 <div class="search-options mt-4">
@@ -26,7 +26,17 @@
     <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
     <label class="btn btn-primary" for="option2">Search by Pincode</label>
 
-    <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off" >
+    <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off">
     <label class="btn btn-primary" for="option3">Search by City</label>
 </div>
+
+<div class="maps">
+    <form method="POST" action="">{% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+    </form>
+</div>
 {% endblock content %}
+
+{% block js %}
+{% endblock js %}

@@ -51,3 +51,14 @@ class bike(models.Model):
     def __str__(self) -> str:
         return f" {self.bikename} ({self.brandname})"
 
+
+class Station(models.Model):
+    address = models.CharField(verbose_name="Address",max_length=100, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, help_text='Select your city')
+    post_code = models.CharField(verbose_name="Post Code",max_length=8, null=True, blank=True)
+    country = models.CharField(verbose_name="Country",max_length=100, null=True, blank=True)	
+    longitude = models.CharField(verbose_name="Longitude",max_length=50, null=True, blank=True)
+    latitude = models.CharField(verbose_name="Latitude",max_length=50, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f'{self.address} ({self.post_code})'
