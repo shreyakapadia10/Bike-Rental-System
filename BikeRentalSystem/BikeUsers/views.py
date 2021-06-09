@@ -54,10 +54,11 @@ def add_station(request):
 			up_form.save()
 
 			result = "perfect"
-			message = "Station details added"
+			message = "Station Details Added Successfully!"
 			context = {"result": result, "message": message,}
 		else:
-			context = {"result": result, "message": "error"}
+			message = "Station Details Can't Be Added, Try again!"
+			context = {"result": result, "message": message}
 
 		return HttpResponse(
 			json.dumps(context),

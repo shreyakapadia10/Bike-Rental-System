@@ -6,7 +6,11 @@ function loadMapScenario() {
     });
     Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
         var options = {
-            maxResults: 5,
+            addressSuggestions: true,
+            businessSuggestions: true,
+            autoDetectLocation: true,
+            placeSuggestions: true,
+            maxResults: 10,
             map: map
         };
         var manager = new Microsoft.Maps.AutosuggestManager(options);
@@ -21,14 +25,14 @@ function loadMapScenario() {
         //     'Suggestion: ' + suggestionResult.formattedSuggestion +
         //     '<br> Lat: ' + suggestionResult.location.latitude +
         //     '<br> Lon: ' + suggestionResult.location.longitude +
-        //     '<br> District: ' + suggestionResult.address.district +
+        //     '<br> city: ' + suggestionResult.address.city +
         //     '<br> Postal Code: ' + suggestionResult.address.postalCode;
         // '<br> Country Region: ' + suggestionResult.address.countryRegion;
         // console.log(suggestionResult);
         let address = suggestionResult.formattedSuggestion;
         let lat = suggestionResult.location.latitude;
         let lng = suggestionResult.location.longitude;
-        let district = suggestionResult.address.district;
+        let city = suggestionResult.address.city;
         let postalCode = suggestionResult.address.postalCode;
         let countryRegion = suggestionResult.address.countryRegion;
 
@@ -60,7 +64,7 @@ function loadMapScenario() {
                     success: function (json) {
                         CustomFormSubmitResponse($('#mapsform button[type=submit]'));
                         alert(json["message"]);
-                        window.location.assign("/")
+                        window.location.assign("/add_station")
                     },
                     error: function (xhr) {
                         CustomFormSubmitResponse($('#mapsform button[type=submit]'));
@@ -73,20 +77,17 @@ function loadMapScenario() {
 
 
         $('#id_address').val(address)
-        // $('#id_district').val(district)
+        // $('#id_city').val(city)
 
-        if (district != undefined) {
-            $('#id_district').val(district)
-        }
-        else {
-            $('#id_district').val('NA')
-        }
+        // if (city != undefined) {
+        //     $('#id_city').val(city)
+        // }
+        // else {
+        //     $('#id_city').val('NA')
+        // }
 
         if (postalCode != undefined) {
             $('#id_post_code').val(postalCode)
-        }
-        else {
-            $('#id_post_code').val('NA')
         }
 
         $('#id_country').val(countryRegion)

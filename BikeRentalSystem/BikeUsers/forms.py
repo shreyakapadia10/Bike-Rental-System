@@ -38,7 +38,6 @@ class CustomerChangeForm(UserChangeForm):
 
 class MapsForm(forms.ModelForm):
     address = forms.CharField(max_length=100, required=True)
-    district = forms.CharField(max_length=100, required=True)
     post_code = forms.CharField(max_length=8, required=True)
     country = forms.CharField(max_length=40, required=True)
     longitude = forms.CharField(max_length=50, required=True)
@@ -46,7 +45,7 @@ class MapsForm(forms.ModelForm):
 
     class Meta:
         model = Station
-        fields = ('address', 'district', 'post_code', 'country', 'longitude', 'latitude')
+        fields = ('address', 'city', 'post_code', 'country', 'longitude', 'latitude')
 
     def __init__(self, *args, **kwargs):
         super(MapsForm, self).__init__(*args, **kwargs)
