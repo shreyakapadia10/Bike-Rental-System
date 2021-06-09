@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'BikeUsers.apps.BikeusersConfig',
-    'geoposition',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -129,8 +129,3 @@ AUTH_USER_MODEL = 'BikeUsers.Customer' # new
 
 LOGIN_REDIRECT_URL = 'CustomerHome'
 LOGOUT_REDIRECT_URL = 'CustomerLogin'
-
-# EASY_MAPS_GOOGLE_KEY = 'AIzaSyBFaEYr0GdoxIL9CPhMKnN3GTyj4l18EL8'
-# EASY_MAPS_CENTER = (-41.3, 32)
-GEOPOSITION_GOOGLE_MAPS_API_KEY  = 'AIzaSyBFaEYr0GdoxIL9CPhMKnN3GTyj4l18EL8'
-GOOGLE_API_KEY  = 'AIzaSyBFaEYr0GdoxIL9CPhMKnN3GTyj4l18EL8'
