@@ -1,0 +1,42 @@
+{% extends 'BikeUsers/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+<!-- To print warning/success alert -->
+{% if messages %}
+
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if user.is_authenticated %}
+<h1>Welcome, {{user.username}}! </h1>
+{% endif %}
+
+<div class="search-options mt-4">
+    <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
+    <label class="btn btn-primary" for="option1">Search by Maps</label>
+
+    <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+    <label class="btn btn-primary" for="option2">Search by Pincode</label>
+
+    <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off">
+    <label class="btn btn-primary" for="option3">Search by City</label>
+</div>
+
+<div class="maps">
+    <form method="POST" action="">{% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+    </form>
+</div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

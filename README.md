@@ -8,4 +8,5 @@ It has 3 users:
 bike user can rent a bike.
 bike operator can give bike for rent.
 admin can approve user and operator.
-User can find a bike to nearest area in the city.
+bike operator station can be traced to google map. 
+Bike operator can see bike user id proof.
