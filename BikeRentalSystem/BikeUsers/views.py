@@ -14,9 +14,14 @@ import json
 def home(request):
 	if request.user.is_authenticated:
 		stations = Station.objects.all()
-		station_json = serialize('json', stations)
-		form = CityForm()
-		return render(request, 'BikeUsers/index.html', {'stations': station_json, 'form': form})
+		if len(stations) > 0:
+			station_json = serialize('json', stations)
+			form = CityForm()
+			return render(request, 'BikeUsers/index.html', {'stations': station_json, 'form': form})
+		else:
+			form = CityForm()
+			return render(request, 'BikeUsers/index.html', {'stations': '', 'form': form})
+
 	else:
 		return redirect('CustomerLogin')
 

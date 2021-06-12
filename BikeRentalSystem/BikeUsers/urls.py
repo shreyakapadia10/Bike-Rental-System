@@ -9,7 +9,6 @@ urlpatterns = [
     path('login/', view=SignIn.as_view(), name='CustomerLogin'),
     path('logout/', view=auth_view.LogoutView.as_view(template_name='BikeUsers/login.html'), name='CustomerLogout'),
     path('bikeadd/', view=BikeAddView.as_view(), name='BikeRegister'),
-    # path('search_pincode/', view=search_pincode, name='SearchPincode'),
     path('search_city/', view=search_city, name='SearchCity'),
     path('search_station/', view=search_station, name='SearchStation'),
     path('get_map/<int:pk>/', view=get_map, name='GetMap'),
