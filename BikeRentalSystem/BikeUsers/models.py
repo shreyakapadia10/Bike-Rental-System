@@ -53,6 +53,7 @@ class bike(models.Model):
 
 
 class Station(models.Model):
+    name = models.CharField(verbose_name="Name",max_length=100, null=True, blank=True)
     address = models.CharField(verbose_name="Address",max_length=100, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, help_text='Select your city')
     post_code = models.CharField(verbose_name="Post Code",max_length=8, null=True, blank=True)
@@ -61,4 +62,4 @@ class Station(models.Model):
     latitude = models.CharField(verbose_name="Latitude",max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.address} ({self.post_code})'
+        return f'{self.name} ({self.post_code})'
