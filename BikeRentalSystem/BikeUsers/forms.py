@@ -82,6 +82,10 @@ class MapsForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
+class CustomerUpdateForm(UserChangeForm):
+    class Meta:
+        model=Customer
+        fields=['email','contact']
 
 class CityForm(forms.ModelForm):
     CHOICES = (

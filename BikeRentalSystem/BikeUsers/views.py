@@ -16,6 +16,7 @@ import email.message
 from django.core.serializers import serialize
 import json
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -220,6 +221,10 @@ def Create_NewPass(request):
 
     
 
+class MapsView(CreateView):
+    form_class = MapsForm
+    template_name = 'BikeUsers/index.html'
+    success_url = reverse_lazy('CustomerHome')
 def search_city(request):
 	if request.is_ajax():
 		# getting data from state input
@@ -271,15 +276,15 @@ def add_station(request):
 	message = "Something went wrong. Please check and try again"
 
 	if request.is_ajax() and request.method == "POST":
-		up_form = MapsForm(data=request.POST)
-
-		# if both forms are valid, do something
+		up_form = MapsForm(data = request.POST)
+		
+		#if both forms are valid, do something
 		if up_form.is_valid():
 			up_form.save()
 
 			result = "perfect"
 			message = "Station Details Added Successfully!"
-			context = {"result": result, "message": message, }
+			context = {"result": result, "message": message,}
 		else:
 			message = "Station Details Can't Be Added, Try again!"
 			context = {"result": result, "message": message}
@@ -287,12 +292,34 @@ def add_station(request):
 		return HttpResponse(
 			json.dumps(context),
 			content_type="application/json"
-		)
-
+			)
+		
 	context = {
-		'up_form': up_form,
-	}
+		'up_form':up_form,
+		}
 	return render(request, 'BikeUsers/add_station.html', context)
+
+def bikeinfo(request):
+	bikes=bike.objects.all()
+	paginate_by = 2
+	return render(request, 'BikeUsers/viewbike.html', {'viewbike': bikes })
+
+@login_required
+def CustomerUpdateView(request):
+    if request.method == 'POST':
+        u_form = CustomerUpdateForm(request.POST,instance=request.user)
+        if u_form.is_valid():
+            u_form.save()
+            messages.success(request,'Your Profile has been updated!')
+            return redirect('CustomerHome')
+        else:
+             messages.error(request,'Please Enter Correct')
+    else:
+        u_form = CustomerUpdateForm(instance=request.user)
+
+    context={ 'u_form': u_form}
+    return render(request, 'BikeUsers/update_customer.html',context )
+
 
 class Bikedetails(DetailView):
     model = bike

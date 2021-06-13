@@ -7,7 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class State(models.Model):
     name = models.CharField(max_length=50)
 
-    def _str_(self) -> str:
+    def __str__(self) -> str:
         return self.name
 
 
@@ -15,7 +15,7 @@ class City(models.Model):
     name = models.CharField(max_length=50)
     state = models.ForeignKey(to=State, on_delete=models.CASCADE)
 
-    def _str_(self) -> str:
+    def __str__(self) -> str:
         return self.name 
 
 
@@ -33,8 +33,9 @@ class Customer(AbstractUser):
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, help_text='Select your state') 
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, help_text='Select your city')
 
-    def _str_(self) -> str:
+    def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} ({self.email})"
+
 
 class bike(models.Model):
     BIKE_STATUS_CHOICES = [('A', 'Available'), ('R', 'Rent')] 
@@ -45,9 +46,9 @@ class bike(models.Model):
     price_day = models.IntegerField(help_text='Enter bike price per day', null=True)
     registered_no = models.CharField(max_length=50, help_text='Enter bike registered number')
     bike_image=models.ImageField(upload_to='bike_image', help_text='Add bike image', null=True)
-    bike_manufactured_date=models.DateTimeField(help_text='Add Manufactured date of bike')
+    bike_manufactured_date=models.DateField(help_text='Add Manufactured date of bike')
     bikecolor = models.CharField(max_length=50, help_text='Enter bike color')
-    bikestatus = models.CharField(choices=BIKE_STATUS_CHOICES, max_length=1, default='A')
+    bikestatus = models.CharField(choices=BIKE_STATUS_CHOICES, max_length=1, default='W')
     station_id = models.IntegerField(help_text='Enter bike Station id')
     
     def __str__(self) -> str:
