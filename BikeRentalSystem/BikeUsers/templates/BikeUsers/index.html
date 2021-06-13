@@ -1,7 +1,7 @@
 {% extends 'BikeUsers/base.html' %}
 {% load static %}
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 {% block content %}
 <!-- To print warning/success alert -->
@@ -16,17 +16,86 @@
 {% endif %}
 
 {% if user.is_authenticated %}
-    <h1>Welcome, {{user.username}}! </h1>
+<h1>Welcome, {{user.username}}! </h1>
 {% endif %}
 
-<div class="search-options mt-4">
-    <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
-    <label class="btn btn-primary" for="option1">Search by Maps</label>
+{{ stations|json_script:"data" }}
 
-    <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
-    <label class="btn btn-primary" for="option2">Search by Pincode</label>
-
-    <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off" >
-    <label class="btn btn-primary" for="option3">Search by City</label>
+<div class="btn-group my-3 form-center" role="group" aria-label="Basic outlined example">
+    <button type="button" class="btn btn-outline-primary" id="mapSearch">Search by Maps</button>
+    <button type="button" class="btn btn-outline-primary" id="pincodeSearch">Search by Pincode</button>
+    <button type="button" class="btn btn-outline-primary" id="citySearch">Search by City</button>
 </div>
+
+
+<!-- Showing form for pincode search start-->
+<div id="searchOutput" class="form-center">
+    <form method='POST' class="col-md-12 my-3 form-center" id='pinCodeForm' style="display: none;">
+        {% csrf_token %}
+        <input type='text' min=6 max=6 name='pincodeText' id='pincodeText' class="form-control mx-3"
+            placeholder="Enter Pincode" required>
+
+        <input type='submit' class="btn btn-warning" id='pincodeBtn' name='pincodeBtn' value="Search">
+    </form>
+</div>
+<!-- Showing form for pincode search end -->
+
+<!-- Showing form for city search start -->
+
+<div class="container mb-3 col-md-12" id="CityForm" style="display: none;">
+    <form class="row col-md-12" method="post" id="mapsform">
+        {% csrf_token %}
+        {{form}}
+    </form>
+</div>
+
+<!-- Showing form for city search end -->
+
+<!-- Showing form for maps search start -->
+
+<div id='searchBoxContainer' style="display: none;">
+    <label for="searchLabel" class="form-label">Search Location:</label>
+    <input type='text' id='searchBox' class="form-control mb-3" placeholder="Start typing location..."
+        autocomplete="off" />
+</div>
+<!-- Showing form for maps search end -->
+
+
+<!-- Result of search for pincode and city by search start -->
+<table class="table table-striped table-hover caption-top" id='stationTable' style="display: none;">
+    <caption>List of stations</caption>
+    <thead>
+        <tr>
+            <th scope="col">SR No.</th>
+            <th scope="col">Name of Station</th>
+            <th scope="col">Pincode</th>
+            <th scope="col">Address</th>
+            <th scope="col">Directions</th>
+        </tr>
+    </thead>
+    <tbody id='tbody'>
+    </tbody>
+</table>
+<!-- Result of search for pincode and city by search end -->
+
+<!-- Showing stations on map start -->
+<div id="myMap" style="position:relative;width:1300px;height:600px;" class="mb-3"></div>
+<!-- Showing stations on map end -->
+
 {% endblock content %}
+
+{% block js %}
+<!-- define required variables in template -->
+<script>
+    var URL = "{% url 'SearchStation' %}";
+    var URL1 = "{% url 'SearchCity' %}";
+</script>
+<script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+<script src="{% static 'js/home.js' %}"></script>
+
+<script type='text/javascript'
+    src='https://www.bing.com/api/maps/mapcontrol?key=AoCKO8_fba-FuLiqndRFZjJCyLW6_xi7ABuWX_PJFzffKtBFStyV5kPFPTWK-ADu&callback=loadMapScenario'
+    async defer></script>
+
+<script id="data" type="application/json"></script>
+{% endblock js %}
