@@ -3,3 +3,13 @@
     align-items: center;
     justify-content: center;
 }
+.column {
+    float: left;
+    width: 33.33%;
+    padding: 5px;
+}
+
+.row:: after {
+    content: "";
+    display: table;   
+}

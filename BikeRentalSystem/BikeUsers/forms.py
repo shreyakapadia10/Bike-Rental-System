@@ -63,3 +63,8 @@ class MapsForm(forms.ModelForm):
         super(MapsForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+class CustomerUpdateForm(UserChangeForm):
+    class Meta:
+        model=Customer
+        fields=['email','contact']

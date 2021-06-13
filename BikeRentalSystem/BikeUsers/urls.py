@@ -1,6 +1,6 @@
 from django.contrib import auth
 from django.urls import path
-from .views import SignIn, home, SignUpView, BikeAddView, add_station
+from .views import SignIn, home, SignUpView, BikeAddView, add_station, CustomerUpdateView
 from django.contrib.auth import views as auth_view
 from . import views
 
@@ -13,4 +13,5 @@ urlpatterns = [
     path('logout/', view=auth_view.LogoutView.as_view(template_name='BikeUsers/login.html'), name='CustomerLogout'),
     path('bikeadd/', view=BikeAddView.as_view(), name='BikeRegister'),
     path('viewbike/',views.bikeinfo),
+    path('update_customer/', views.CustomerUpdateView),
 ]

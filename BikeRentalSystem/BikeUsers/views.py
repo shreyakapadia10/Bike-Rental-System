@@ -1,12 +1,15 @@
 from django.shortcuts import redirect, render
-from .forms import CustomerCreationForm, CustomerLoginForm,BikeRegistrationForm, MapsForm
-from django.views.generic.edit import CreateView
+from .forms import CustomerCreationForm, CustomerLoginForm,BikeRegistrationForm, MapsForm, CustomerUpdateForm
+from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth import views as auth_view
 import json
 from django.http import HttpResponse
 from django.views.generic import ListView
-from .models import bike
+from .models import bike, Customer
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def home(request):
     if request.user.is_authenticated:
@@ -78,6 +81,24 @@ def add_station(request):
 
 def bikeinfo(request):
 	bikes=bike.objects.all()
+	paginate_by = 2
 	return render(request, 'BikeUsers/viewbike.html', {'viewbike': bikes })
 
+@login_required
+def CustomerUpdateView(request):
+    if request.method == 'POST':
+        u_form = CustomerUpdateForm(request.POST,instance=request.user)
+        if u_form.is_valid():
+            u_form.save()
+            messages.success(request,'Your Profile has been updated!')
+            return redirect('CustomerHome')
+        else:
+             messages.error(request,'Please Enter Correct')
+    else:
+        u_form = CustomerUpdateForm(instance=request.user)
 
+    context={ 'u_form': u_form}
+    return render(request, 'BikeUsers/update_customer.html',context )
+
+
+    
