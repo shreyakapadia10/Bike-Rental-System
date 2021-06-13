@@ -1,0 +1,10 @@
+<form method="POST">
+    {% csrf_token %}
+    <h1>Check Your Email Id For OTP</h1>
+    <br>
+    <label>Enter Your OTP Here...</label>
+    <br>
+    <input type="text" name="otp">
+    <br>
+    <input type="submit" value="check">
+</form>

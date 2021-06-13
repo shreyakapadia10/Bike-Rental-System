@@ -2,6 +2,7 @@
 {% load static %}
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 {% endblock css %}
 {% block content %}
 
@@ -50,5 +51,7 @@
 {% endblock content %}
 
 {% block js %}
-  <script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/jquery-3.6.0.js' %}" ></script>
+<script src="{% static 'js/jquery-ui.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock js %}
