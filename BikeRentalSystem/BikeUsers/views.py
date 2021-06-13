@@ -7,6 +7,8 @@ from django.contrib.auth import login, authenticate
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth import views as auth_view
+from django.views.generic import ListView, DetailView
+from .models import bike
 
 # Create your views here.
 # def register(request):
@@ -63,4 +65,7 @@ class BikeAddView(CreateView):
     form_class = BikeRegistrationForm
     success_url = reverse_lazy('CustomerLogin')
     template_name = 'BikeUsers/bikeadd.html'
-    
+
+class Bikedetails(DetailView):
+    model = bike
+    template_name = 'BikeUsers/BikeDetails.html'  
