@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 class State(models.Model):
     name = models.CharField(max_length=50)
@@ -34,8 +36,9 @@ class Customer(AbstractUser):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} ({self.email})"
 
+
 class bike(models.Model):
-    BIKE_STATUS_CHOICES = [('W', 'Working'), ('N', 'Non-Working')] 
+    BIKE_STATUS_CHOICES = [('A', 'Available'), ('R', 'Rent')] 
     operatorid = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, help_text='Enter operator id')
     bikename = models.CharField(max_length=50, help_text='Enter bike name')
     brandname = models.CharField(max_length=50, help_text='Enter bike brand name')
@@ -52,6 +55,16 @@ class bike(models.Model):
         return f" {self.bikename} ({self.brandname})"
 
 
+
+class Rating(models.Model):
+    suggestions=models.CharField(max_length=50, help_text='Enter your suggestion',default='Good')
+    star = models.IntegerField(help_text='Add ratings')
+
+    def __str__(self):
+        return str(self.pk)
+
+  
+
 class Station(models.Model):
     name = models.CharField(verbose_name="Name",max_length=100, null=True, blank=True)
     address = models.CharField(verbose_name="Address",max_length=100, null=True, blank=True)
@@ -63,3 +76,4 @@ class Station(models.Model):
 
     def __str__(self) -> str:
         return f'{self.name} ({self.post_code})'
+

@@ -3,6 +3,23 @@
     align-items: center;
     justify-content: center;
 }
+.checked {
+    color: red;
+}
+
+.my-btn {
+    background-color: inherit !important;
+    border: 0 !important;
+.column {
+    float: left;
+    width: 33.33%;
+    padding: 5px;
+}
+
+.row:: after {
+    content: "";
+    display: table;   
+}
 
 body{
     margin:0;

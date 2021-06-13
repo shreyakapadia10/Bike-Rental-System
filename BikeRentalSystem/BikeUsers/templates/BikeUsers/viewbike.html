@@ -1,0 +1,53 @@
+{% extends 'BikeUsers/base.html' %}
+{% load static %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+<html>
+    <body>
+        <h1>Available Bikes</h1>
+        <div class="row col-md-12">
+            {% for b in viewbike %}
+            <div class="card body col-md-4 ">
+            {% if b.bike_image %}
+                   
+                  <img  src="{{ b.bike_image.url }}" alt="Bike Image"><br>
+                  <h3>{{b.bikename}}</h3><br>
+                  <a href="#" class="btn btn-primary">View Details</a>
+           {% endif %}
+           </div>
+           {% endfor %}
+         </div>
+       
+        
+    </body>
+
+
+    
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+    {% endif %}
+
+  </html>
+    
+
+{% endblock content %}
