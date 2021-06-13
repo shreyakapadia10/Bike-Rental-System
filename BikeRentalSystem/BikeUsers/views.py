@@ -9,6 +9,8 @@ from django.http import HttpResponse
 from .models import Station, City
 from django.core.serializers import serialize
 import json
+from django.views.generic import ListView, DetailView
+from .models import bike
 
 
 def home(request):
@@ -146,3 +148,7 @@ def add_station(request):
 		'up_form': up_form,
 	}
 	return render(request, 'BikeUsers/add_station.html', context)
+
+class Bikedetails(DetailView):
+    model = bike
+    template_name = 'BikeUsers/BikeDetails.html'  

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SignIn, home, SignUpView, add_station, get_map, search_city, search_station, BikeAddView
+from .views import SignIn, home, SignUpView, add_station, get_map, search_city, search_station, BikeAddView, Bikedetails
 from django.contrib.auth import views as auth_view
 
 urlpatterns = [
@@ -12,4 +12,6 @@ urlpatterns = [
     path('search_city/', view=search_city, name='SearchCity'),
     path('search_station/', view=search_station, name='SearchStation'),
     path('get_map/<int:pk>/', view=get_map, name='GetMap'),
+    path('bike/<int:pk>/',view=Bikedetails.as_view(),name='ShowBikeDetails'),
 ]
+
