@@ -4,8 +4,7 @@
     "\\BikeRentalSystem",
     "\\BikeUsers",
     "\\BikeUsers\\templates",
-    "\\BikeUsers\\templates\\BikeUsers",
-    "\\media\\images"
+    "\\BikeUsers\\templates\\BikeUsers"
   ],
   "SelectedNode": "\\BikeUsers\\urls.py",
   "PreviewInSolutionExplorer": false

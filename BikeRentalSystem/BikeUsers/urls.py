@@ -1,8 +1,5 @@
 from django.urls import path
-from .views import SignIn, home, SignUpView, BikeAddView, BikeUpdateView, BikeDeleteView, Rettingadd, password_reset_request
-from .views import add_station, get_map, search_city, search_station, Bikedetails
 from django.contrib.auth import views as auth_view
-from django.contrib.auth import views as auth_views
 from .views import *
 
 urlpatterns = [
