@@ -13,3 +13,39 @@
     content: "";
     display: table;   
 }
+
+body{
+    margin:0;
+    padding:0;
+    scroll-behavior: smooth;
+    font-family:'Segoe UI',Helvetica,Arial,Sans-Serif
+}
+
+#myMap{
+    position:relative;
+    width:925px;
+    height:600px; 
+    float: right;
+    margin-left: 20px;
+}
+
+#directionsItinerary{
+    float: left; 
+    width: 28.33%;
+}
+
+#routeInfoPanel{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.dirInstructions td, .dirInstructions th{
+    padding-top:0px !important;
+    padding-bottom:0px !important;
+}
+
+.dirSDK p{
+    margin-top:0px !important;
+    margin-bottom:0px !important;
+}

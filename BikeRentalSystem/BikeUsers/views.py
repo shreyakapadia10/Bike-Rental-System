@@ -1,36 +1,70 @@
 from django.shortcuts import redirect, render
-from .forms import CustomerCreationForm, CustomerLoginForm,BikeRegistrationForm, MapsForm, CustomerUpdateForm
-from django.views.generic.edit import CreateView, UpdateView
+from .forms import *
+from django.http import JsonResponse, HttpResponse
+from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth import views as auth_view
+from .models import *
+from django.core.serializers import serialize
 import json
-from django.http import HttpResponse
-from django.views.generic import ListView
-from .models import bike, Customer
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.views.generic import ListView, DetailView
+
 
 def home(request):
-    if request.user.is_authenticated:
-        return render(request, 'BikeUsers/maps.html')
-    else:
-        return redirect('CustomerLogin')
+	if request.user.is_authenticated:
+		stations = Station.objects.all()
+		if len(stations) > 0:
+			station_json = serialize('json', stations)
+			form = CityForm()
+			return render(request, 'BikeUsers/index.html', {'stations': station_json, 'form': form})
+		else:
+			form = CityForm()
+			return render(request, 'BikeUsers/index.html', {'stations': '', 'form': form})
+
+	else:
+		return redirect('CustomerLogin')
 
 
-class SignUpView(CreateView):
-    form_class = CustomerCreationForm
-    success_url = reverse_lazy('CustomerLogin')
-    template_name = 'BikeUsers/register.html'
-    success_message = 'Registered Successfully! You can now login with your username!'
+def search_station(request):
+	if request.is_ajax():
+		is_pincode = request.POST.get('is_pincode', None)
+		is_city = request.POST.get('is_city', None)
+		stations = ""
 
+		# If user has searched via pincode
+		if is_pincode == 'true':
+			# getting data from pincodeText input
+			pincode = request.POST.get('pincodeText', None)
 
-class SignIn(auth_view.LoginView):
-    form_class = CustomerLoginForm
-    success_url = reverse_lazy('CustomerHome')
-    template_name = 'BikeUsers/login.html'
-    success_message = 'Logged in successfully!'
-    redirect_authenticated_user = True
+			if pincode:  # cheking if pincodeText has value
+				stations = Station.objects.filter(post_code=int(pincode))
+
+		# If user has searched via city
+		if is_city == 'true':
+			city = request.POST.get('city', None)
+
+			if city:
+				stations = Station.objects.filter(city=city)
+
+		# Sending list of stations to user
+
+		# If stations found with given pincode or city
+		if len(stations) > 0:
+			station_json = serialize('json', stations)
+			response = {
+				'stations': station_json
+			}
+
+		# If no station found with given pincode or city, send blank data
+		else:
+			response = {
+				'stations': ''
+			}
+		return JsonResponse(response)  # return response as JSON
+
+	# If user has come here via any other request except ajax, redirect to home page again
+	else:
+		return redirect('CustomerHome')
 
 class BikeAddView(CreateView):
     form_class = BikeRegistrationForm
@@ -42,6 +76,43 @@ class MapsView(CreateView):
     form_class = MapsForm
     template_name = 'BikeUsers/index.html'
     success_url = reverse_lazy('CustomerHome')
+def search_city(request):
+	if request.is_ajax():
+		# getting data from state input
+		state = request.POST.get('state', None)
+
+		if state:  # cheking if state has value
+			
+			cities = City.objects.filter(state=state)
+
+			city_json = serialize('json', cities)
+			response = {
+				'cities': city_json
+			}
+			
+			return JsonResponse(response)  # return response as JSON
+	else:
+		return redirect('CustomerHome')
+
+
+def get_map(request, pk):
+	station = Station.objects.get(id=pk)
+	station_json = serialize('json',[station])
+	return render(request=request, template_name='BikeUsers/get_map.html', context={'station': station_json})
+
+class SignUpView(CreateView):
+	form_class = CustomerCreationForm
+	success_url = reverse_lazy('CustomerLogin')
+	template_name = 'BikeUsers/register.html'
+	success_message = 'Registered Successfully! You can now login with your username!'
+
+
+class SignIn(auth_view.LoginView):
+	form_class = CustomerLoginForm
+	success_url = reverse_lazy('CustomerHome')
+	template_name = 'BikeUsers/login.html'
+	success_message = 'Logged in successfully!'
+	redirect_authenticated_user = True
 
 
 class AddStationView(CreateView):
@@ -101,4 +172,6 @@ def CustomerUpdateView(request):
     return render(request, 'BikeUsers/update_customer.html',context )
 
 
-    
+class Bikedetails(DetailView):
+    model = bike
+    template_name = 'BikeUsers/BikeDetails.html'  

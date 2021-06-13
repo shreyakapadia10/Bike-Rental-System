@@ -1,5 +1,5 @@
 from django import forms
-from .models import Customer, bike, Station
+from .models import City, Customer, State, Station, bike
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 
 class CustomerCreationForm(UserCreationForm):
@@ -49,6 +49,7 @@ class CustomerChangeForm(UserChangeForm):
 
 
 class MapsForm(forms.ModelForm):
+    name = forms.CharField(max_length=100, required=True)
     address = forms.CharField(max_length=100, required=True)
     post_code = forms.CharField(max_length=8, required=True)
     country = forms.CharField(max_length=40, required=True)
@@ -57,7 +58,7 @@ class MapsForm(forms.ModelForm):
 
     class Meta:
         model = Station
-        fields = ('address', 'city', 'post_code', 'country', 'longitude', 'latitude')
+        fields = ('name', 'address', 'city', 'post_code', 'country', 'longitude', 'latitude')
 
     def __init__(self, *args, **kwargs):
         super(MapsForm, self).__init__(*args, **kwargs)
@@ -68,3 +69,16 @@ class CustomerUpdateForm(UserChangeForm):
     class Meta:
         model=Customer
         fields=['email','contact']
+
+class CityForm(forms.ModelForm):
+    CHOICES = (
+        ("", "---------"),
+    )
+
+    name = forms.ChoiceField(required=True, choices=CHOICES, label="City", widget=forms.Select(attrs={'class': 'form-control'}))
+    states = State.objects.all()
+    state = forms.ModelChoiceField(queryset=states, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = City
+        fields = ['state', 'name']

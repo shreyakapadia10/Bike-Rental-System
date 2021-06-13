@@ -21,18 +21,9 @@ function loadMapScenario() {
         map.setView({ bounds: suggestionResult.bestView });
         var pushpin = new Microsoft.Maps.Pushpin(suggestionResult.location);
         map.entities.push(pushpin);
-        // document.getElementById('printoutPanel').innerHTML =
-        //     'Suggestion: ' + suggestionResult.formattedSuggestion +
-        //     '<br> Lat: ' + suggestionResult.location.latitude +
-        //     '<br> Lon: ' + suggestionResult.location.longitude +
-        //     '<br> city: ' + suggestionResult.address.city +
-        //     '<br> Postal Code: ' + suggestionResult.address.postalCode;
-        // '<br> Country Region: ' + suggestionResult.address.countryRegion;
-        // console.log(suggestionResult);
         let address = suggestionResult.formattedSuggestion;
         let lat = suggestionResult.location.latitude;
         let lng = suggestionResult.location.longitude;
-        let city = suggestionResult.address.city;
         let postalCode = suggestionResult.address.postalCode;
         let countryRegion = suggestionResult.address.countryRegion;
 
@@ -77,14 +68,6 @@ function loadMapScenario() {
 
 
         $('#id_address').val(address)
-        // $('#id_city').val(city)
-
-        // if (city != undefined) {
-        //     $('#id_city').val(city)
-        // }
-        // else {
-        //     $('#id_city').val('NA')
-        // }
 
         if (postalCode != undefined) {
             $('#id_post_code').val(postalCode)
