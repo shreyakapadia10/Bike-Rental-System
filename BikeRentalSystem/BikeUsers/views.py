@@ -8,6 +8,7 @@ from .models import *
 from django.core.serializers import serialize
 import json
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
