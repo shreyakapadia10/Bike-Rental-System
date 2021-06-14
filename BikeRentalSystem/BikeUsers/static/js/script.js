@@ -18,3 +18,9 @@ Array.prototype.slice.call(forms)
     }, false)
     })
 })()
+
+
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+});
+

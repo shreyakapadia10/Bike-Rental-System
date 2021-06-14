@@ -70,7 +70,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'BikeRentalSystem.wsgi.application'
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -129,8 +129,3 @@ AUTH_USER_MODEL = 'BikeUsers.Customer' # new
 
 LOGIN_REDIRECT_URL = 'CustomerHome'
 LOGOUT_REDIRECT_URL = 'CustomerLogin'
-
-# EASY_MAPS_GOOGLE_KEY = 'AIzaSyBFaEYr0GdoxIL9CPhMKnN3GTyj4l18EL8'
-# EASY_MAPS_CENTER = (-41.3, 32)
-GEOPOSITION_GOOGLE_MAPS_API_KEY  = 'AIzaSyBFaEYr0GdoxIL9CPhMKnN3GTyj4l18EL8'
-GOOGLE_API_KEY  = 'AIzaSyBFaEYr0GdoxIL9CPhMKnN3GTyj4l18EL8'
