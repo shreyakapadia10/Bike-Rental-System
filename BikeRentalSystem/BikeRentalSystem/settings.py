@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'BikeUsers.apps.BikeusersConfig',
+    'BikeOperators.apps.BikeoperatorsConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
