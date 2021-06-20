@@ -1,7 +1,7 @@
 from django.contrib import auth
 from django.urls import path
 from .views import *
-from django.contrib.auth import views as auth_view
+from django.contrib.auth import views as auth_views
 from .views import *
 
 
@@ -19,6 +19,26 @@ urlpatterns = [
     #path('reset/<uidb64>/<token>/', auth_view.PasswordResetConfirmView.as_view(template_name="BikeUsers/password/password_reset_confirm.html"), name='password_reset_confirm'),
     #path('reset/done/', auth_view.PasswordResetCompleteView.as_view(template_name='BikeUsers/password/password_reset_complete.html'), name='password_reset_complete'),  
     #path("password_reset/", password_reset_request, name="password_reset"),
+     path('password-reset/',
+         auth_views.PasswordResetView.as_view(
+             template_name='BikeUsers/password/password_reset.html'
+         ),
+         name='password_reset'),
+    path('password-reset/done/',
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='BikeUsers/password/password_reset_done.html'
+         ),
+         name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(
+             template_name='BikeUsers/password/password_reset_confirm.html'
+         ),
+         name='password_reset_confirm'),
+    path('password-reset-complete/',
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='BikeUsers/password/password_reset_complete.html'
+         ),
+         name='password_reset_complete'),
     path('viewbike/',bikeinfo),
     path('update_customer/', CustomerUpdateView),
     path('search_city/', view=search_city, name='SearchCity'),
