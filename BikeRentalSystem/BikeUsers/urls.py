@@ -23,5 +23,7 @@ urlpatterns = [
     path('search_station/', view=search_station, name='SearchStation'),
     path('get_map/<int:pk>/', view=get_map, name='GetMap'),
     path('bike/<int:pk>/',view=Bikedetails.as_view(),name='ShowBikeDetails'),
+    path('payment/',view=MakePayment, name='Payment'),
+    path('check_bikes/', check_bikes, name='CheckBikes')
 ]
 

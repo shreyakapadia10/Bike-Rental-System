@@ -1,5 +1,5 @@
 from django import forms
-from .models import City, Customer, State, Station, bike
+from .models import BikeRentHistory, City, Customer, State, Station, bike
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from functools import partial
 
@@ -59,7 +59,6 @@ class CustomerLoginForm(AuthenticationForm):
 
 
 class CustomerChangeForm(UserChangeForm):
-
     class Meta:
         model = Customer
         exclude = ('status', )
@@ -82,10 +81,6 @@ class MapsForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
-class CustomerUpdateForm(UserChangeForm):
-    class Meta:
-        model=Customer
-        fields=['email','contact']
 
 class CityForm(forms.ModelForm):
     CHOICES = (
@@ -99,3 +94,9 @@ class CityForm(forms.ModelForm):
     class Meta:
         model = City
         fields = ['state', 'name']
+
+
+class CustomerUpdateForm(UserChangeForm):
+    class Meta:
+        model=Customer
+        fields=['email','contact']
