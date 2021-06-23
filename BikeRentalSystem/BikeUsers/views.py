@@ -1,4 +1,5 @@
-from datetime import date
+from django.db.models import Q
+from datetime import date, timedelta
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect, render
@@ -337,6 +338,7 @@ def check_bikes(request):
 
         # Calling user defined format_date function to format the date and time
         from_date, to_date, from_date_time, to_date_time = format_date(from_date, to_date, from_time, to_time)
+        to_date_time = to_date_time + timedelta(days=1)
 
         # Calculatig duration
         duration = to_date_time - from_date_time
@@ -345,11 +347,12 @@ def check_bikes(request):
         # Getting number of days and hours
         days = divmod(duration_in_s, 86400) # Get days (without [0]!)
         hours = divmod(days[1], 3600) # Use remainder of days to calc hours
+        minutes = divmod(hours[1], 60) # Use remainder of hours to calc minutes
 
         # Getting bikes which are on rent on given date and time of particular station
         # To select between range the field name is combined with '__range' and start and end date is provided
 
-        bike_rent_history = BikeRentHistory.objects.filter(from_date_time__range=(from_date, to_date), station=station_id)
+        bike_rent_history = BikeRentHistory.objects.filter(from_date_time__range=[from_date_time, to_date_time], station=station_id)
 
         bikes_available = ""
 
@@ -371,7 +374,7 @@ def check_bikes(request):
         bikes_json = serialize('json', bikes_available)
 
         # Creating response object
-        response = {'bikes': bikes_json, 'days': days[0], 'hours': hours[0]}
+        response = {'bikes': bikes_json, 'days': days[0], 'hours': hours[0], 'minutes': minutes[0]}
         
         # Sending response
         return JsonResponse(response)
@@ -388,12 +391,12 @@ def MakePayment(request):
 
         from_date, to_date, from_date_time, to_date_time = format_date(from_date, to_date, from_time, to_time)
         response = {}
-
-        Bike = bike.objects.get(id=bikeId)
-
-        payment = Payment.objects.create(customer=request.user, operator=Bike.operatorid, bike=Bike, station=Bike.station_id, amount=cost, mode=payment_mode)
         
         try:
+            Bike = bike.objects.get(id=bikeId)
+
+            payment = Payment.objects.create(customer=request.user, operator=Bike.operatorid, bike=Bike, station=Bike.station_id, amount=cost, mode=payment_mode)
+
             payment.save()
             bike_rent = BikeRentHistory.objects.create(customer=request.user, operator=Bike.operatorid, from_date_time=from_date_time, to_date_time=to_date_time, payment=payment, bike=Bike, station=Bike.station_id)
 
