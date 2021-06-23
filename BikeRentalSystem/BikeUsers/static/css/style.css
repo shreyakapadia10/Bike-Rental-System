@@ -10,10 +10,6 @@
 .my-btn {
     background-color: inherit !important;
     border: 0 !important;
-.column {
-    float: left;
-    width: 33.33%;
-    padding: 5px;
 }
 
 .row:: after {
@@ -56,3 +52,32 @@ body{
     margin-top:0px !important;
     margin-bottom:0px !important;
 }
+
+
+/* Bike Details CSS start*/
+#box-container {
+    background: rgb(236, 232, 232);
+    display: flex;
+    height: 500px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.23), 0 6px 6px rgba(0,0,0,0.33);
+
+  }
+  #box-1 {
+    background-color: rgb(202, 208, 214);
+    width: 50%;
+    height: 70%;
+    align-self: center;
+  }
+
+  #box-2 {
+    background-color: rgb(255, 255, 255);
+    width: 50%;
+    height: 70%;
+  }
+  .img1{
+    height: 100%;
+    width: 250px;
+  }
+/* Bike Details CSS end*/
