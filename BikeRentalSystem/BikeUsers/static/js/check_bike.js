@@ -79,12 +79,28 @@ $('#availabilityForm').on('submit', function (e) {
     time1 = from_time.split(":")[0];
     time2 = to_time.split(":")[0];
 
+    /* Getting minutes from time */
+    minutes1 = from_time.split(":")[1];
+    minutes2 = to_time.split(":")[1];
+
     /* Getting date from time */
     date1 = from_date.split("-")[2];
     date2 = to_date.split("-")[2];
 
+    if(minutes1 != 00 || minutes2 != 00){
+        alert('Please Select Time in round figures!')
+    }
+
+    else if(time2 - time1 < 0 & date1 == date2){
+        alert('Please Select Appropriate Time!')
+    }
+    
+    else if(date2 - date1 < 0){
+        alert('Please Select Appropriate Date!') 
+    }
+
     /* Checking if the selected time is of minimum 1 hour */
-    if (time2 - time1 < 1 && date2 - date1 < 1) {
+    else if (time2 - time1 < 1 && date2 - date1 < 1) {
         alert('You need to select minimum 1 hour of time!');
     }
 
@@ -112,14 +128,16 @@ $('#availabilityForm').on('submit', function (e) {
                 else {
                     days = JSON.parse(data.days);
                     hours = JSON.parse(data.hours);
+                    minutes = JSON.parse(data.minutes);
 
                     output += `<h1 class="text-center mt-2">Available Bikes</h1>`;
                     for (let i = 0; i < available_bikes.length; i++) {
 
-                        hours_price = hours * available_bikes[i]['fields']['price_hr'];
                         days_price = days * available_bikes[i]['fields']['price_day'];
+                        hours_price = hours * available_bikes[i]['fields']['price_hr'];
+                        minutes_price = (minutes * available_bikes[i]['fields']['price_hr'])/60;
 
-                        cost = days_price + hours_price;
+                        cost = days_price + hours_price + minutes_price;
 
                         bike_details = function (i) {
                             return {
@@ -127,7 +145,7 @@ $('#availabilityForm').on('submit', function (e) {
                                 'name': available_bikes[i]['fields']['bikename'],
                                 'days': days,
                                 'hours': hours,
-                                'cost': hours * available_bikes[i]['fields']['price_hr'] + days * available_bikes[i]['fields']['price_day'],
+                                'cost': hours * available_bikes[i]['fields']['price_hr'] + days * available_bikes[i]['fields']['price_day'] + (minutes * available_bikes[i]['fields']['price_hr'])/60,
                                 'from_date': from_date,
                                 'from_time': from_time,
                                 'to_date': to_date,

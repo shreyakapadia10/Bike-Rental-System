@@ -66,14 +66,14 @@
             </div>
 
             <div class="form-floating mb-3">
-              <input type="time" class="form-control" id="floatingFromTime" placeholder="Select From Time" required>
+              <input type="time" class="form-control" id="floatingFromTime" placeholder="Select From Time" step="3600"  required>
               <label for="floatingFromTime">From Time</label>
               <div class="valid-feedback mt-2">
                 Looks good!
               </div>
 
               <div class="invalid-feedback">
-                <p>Please select appropriate time</p>
+                <p>Please Select Time in round figures</p>
               </div>
             </div>
 
@@ -90,14 +90,14 @@
             </div>
 
             <div class="form-floating">
-              <input type="time" class="form-control" id="floatingToTime" placeholder="Select From Time" required>
+              <input type="time" class="form-control" id="floatingToTime" placeholder="Select From Time" step="3600" required>
               <label for="floatingToTime">To Time</label>
               <div class="valid-feedback mt-2">
                 Looks good!
               </div>
 
               <div class="invalid-feedback">
-                <p>Please select appropriate time</p>
+                <p>Please Select Time in round figures</p>
               </div>
             </div>
             <!-- Form Ends Here -->
@@ -141,6 +141,7 @@
   {% block js %}
   <script id="station_id" type="application/json"></script>
   <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+  <script src="//jonthornton.github.io/jquery-timepicker/jquery.timepicker.js"></script>
   <script src="{% static 'js/jquery-ui.js' %}"></script>
   <script src="{% static 'js/check_bike.js' %}"></script>
   {% endblock js %}

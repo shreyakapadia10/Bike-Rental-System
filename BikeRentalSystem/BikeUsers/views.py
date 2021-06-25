@@ -300,9 +300,11 @@ def add_station(request):
 
 
 def bikeinfo(request, pk):
-    bikes=bike.objects.filter(station_id=pk)
-    paginate_by = 2
-    return render(request, 'BikeUsers/viewbike.html', {'viewbike': bikes, 'station': pk })
+    if request.user.is_authenticated:
+        bikes=bike.objects.filter(station_id=pk)
+        paginate_by = 2
+        return render(request, 'BikeUsers/viewbike.html', {'viewbike': bikes, 'station': pk })
+    return redirect('CustomerLogin')
 
 
 @login_required
@@ -328,93 +330,106 @@ class Bikedetails(DetailView):
 
 
 def check_bikes(request):
-    if request.is_ajax():
-        # Getting form data
-        from_date = request.POST.get('from_date', None)
-        to_date = request.POST.get('to_date', None)
-        from_time = request.POST.get('from_time', None)
-        to_time = request.POST.get('to_time', None)
-        station_id = request.POST.get('station_id', None)
+    if request.user.is_authenticated:
+        if request.is_ajax():
+            # Getting form data
+            from_date = request.POST.get('from_date', None)
+            to_date = request.POST.get('to_date', None)
+            from_time = request.POST.get('from_time', None)
+            to_time = request.POST.get('to_time', None)
+            station_id = request.POST.get('station_id', None)
 
-        # Calling user defined format_date function to format the date and time
-        from_date, to_date, from_date_time, to_date_time = format_date(from_date, to_date, from_time, to_time)
-        to_date_time = to_date_time + timedelta(days=1)
 
-        # Calculatig duration
-        duration = to_date_time - from_date_time
-        duration_in_s  = duration.total_seconds()
+            # Calling user defined format_date function to format the date and time
+            from_date, to_date, from_date_time, to_date_time = format_date(from_date, to_date, from_time, to_time)
 
-        # Getting number of days and hours
-        days = divmod(duration_in_s, 86400) # Get days (without [0]!)
-        hours = divmod(days[1], 3600) # Use remainder of days to calc hours
-        minutes = divmod(hours[1], 60) # Use remainder of hours to calc minutes
+            # to_date_time = to_date_time + timedelta(days=1)
+            # print(to_date_time)
 
-        # Getting bikes which are on rent on given date and time of particular station
-        # To select between range the field name is combined with '__range' and start and end date is provided
+            # Calculatig duration
+            duration = to_date_time - from_date_time
+            duration_in_s  = duration.total_seconds()
 
-        bike_rent_history = BikeRentHistory.objects.filter(from_date_time__range=[from_date_time, to_date_time], station=station_id)
+            # Getting number of days and hours
+            days = divmod(duration_in_s, 86400) # Get days (without [0]!)
+            hours = divmod(days[1], 3600) # Use remainder of days to calc hours
+            minutes = divmod(hours[1], 60) # Use remainder of hours to calc minutes
 
-        bikes_available = ""
+            # Getting bikes which are on rent on given date and time of particular station
+            # To select between range the field name is combined with '__range' and start and end date is provided
 
-        # if queryset is not empty
-        if len(bike_rent_history) > 0:
-            # Looping over query set 'bike_rent_history'
-            for field in bike_rent_history:
-                
-                # Excluding those bikes which are on rent on selected date and time
-                bikes_available = bike.objects.exclude(id=field.bike_id)
-                # print(bikes_available)
+            # bike_rent_history = BikeRentHistory.objects.filter(
+            #     Q(from_date_time__gte=from_date_time) & Q(to_date_time__lte=to_date_time) |
+            #     Q(from_date_time__lte=from_date_time) & Q(to_date_time__gte=to_date_time) |
+            #     Q(from_date_time__range=(from_date_time, to_date_time)),
+            #     station=station_id)
+            
+            bike_rent_history = BikeRentHistory.objects.filter(
+                Q(from_date_time__date=from_date_time) &
+                Q(to_date_time__date= to_date_time) |
+                Q(from_date_time__range=(from_date_time, to_date_time)),
+                station=station_id)
 
-        # If no such bikes find between given date and time range
-        else:
-            bikes_available = bike.objects.filter(station_id=station_id)
-            # print(bikes_available)
+            print(bike_rent_history)
 
-        # Serializing into json
-        bikes_json = serialize('json', bikes_available)
+            bikes_available = ""
 
-        # Creating response object
-        response = {'bikes': bikes_json, 'days': days[0], 'hours': hours[0], 'minutes': minutes[0]}
-        
-        # Sending response
-        return JsonResponse(response)
+            # if queryset is not empty
+            if len(bike_rent_history) > 0:
+                bikes_available = bike.objects.exclude(id__in=bike_rent_history.values_list('bike_id', flat=True))
+
+                print(bikes_available)  
+
+            # If no such bikes find between given date and time range
+            else:
+                bikes_available = bike.objects.filter(station_id=station_id)
+                print(bikes_available)
+
+            # Serializing into json
+            bikes_json = serialize('json', bikes_available)
+
+            # Creating response object
+            response = {'bikes': bikes_json, 'days': days[0], 'hours': hours[0], 'minutes': minutes[0]}
+            
+            # Sending response
+            return JsonResponse(response)
+    return redirect('CustomerLogin')
+
 
 def MakePayment(request):
-    if request.is_ajax():
-        bikeId = request.POST.get('bikeId', None)
-        cost = request.POST.get('cost', None)
-        payment_mode = request.POST.get('payment_mode', None)
-        from_date = request.POST.get('from_date', None)
-        to_date = request.POST.get('to_date', None)
-        from_time = request.POST.get('from_time', None)
-        to_time = request.POST.get('to_time', None)
+    if request.user.is_authenticated:
+        if request.is_ajax():
+            bikeId = request.POST.get('bikeId', None)
+            cost = request.POST.get('cost', None)
+            payment_mode = request.POST.get('payment_mode', None)
+            from_date = request.POST.get('from_date', None)
+            to_date = request.POST.get('to_date', None)
+            from_time = request.POST.get('from_time', None)
+            to_time = request.POST.get('to_time', None)
 
-        from_date, to_date, from_date_time, to_date_time = format_date(from_date, to_date, from_time, to_time)
-        response = {}
-        
-        try:
-            Bike = bike.objects.get(id=bikeId)
-
-            payment = Payment.objects.create(customer=request.user, operator=Bike.operatorid, bike=Bike, station=Bike.station_id, amount=cost, mode=payment_mode)
-
-            payment.save()
-            bike_rent = BikeRentHistory.objects.create(customer=request.user, operator=Bike.operatorid, from_date_time=from_date_time, to_date_time=to_date_time, payment=payment, bike=Bike, station=Bike.station_id)
-
-            bike_rent.save()
-            response = {"message": "Your Bike has been successfully booked!"}
-        except:
-            response = {"message": "Failed to book Bike, please try again!"}
+            from_date, to_date, from_date_time, to_date_time = format_date(from_date, to_date, from_time, to_time)
+            response = {}
             
-        return JsonResponse(response)
+            try:
+                Bike = bike.objects.get(id=bikeId)
 
+                payment = Payment.objects.create(customer=request.user, operator=Bike.operatorid, bike=Bike, station=Bike.station_id, amount=cost, mode=payment_mode)
+
+                payment.save()
+                bike_rent = BikeRentHistory.objects.create(customer=request.user, operator=Bike.operatorid, from_date_time=from_date_time, to_date_time=to_date_time, payment=payment, bike=Bike, station=Bike.station_id)
+
+                bike_rent.save()
+                response = {"message": "Your Bike has been successfully booked!"}
+            except:
+                response = {"message": "Failed to book Bike, please try again!"}
+                
+            return JsonResponse(response)
+    return redirect('CustomerLogin')
 
 def format_date(from_date, to_date, from_time, to_time):
-    from_time = from_time + ":00"
-    to_time = to_time + ":00"
-
     # Combining date time
-    from_date_time = datetime.strptime(from_date + ' ' + from_time, '%Y-%m-%d %H:%M:%S')
-    to_date_time = datetime.strptime(to_date + ' ' + to_time, '%Y-%m-%d %H:%M:%S')
+    from_date_time = datetime.strptime(from_date + ' ' + from_time, '%Y-%m-%d %H:%M')
+    to_date_time = datetime.strptime(to_date + ' ' + to_time, '%Y-%m-%d %H:%M')
     
     from_date = datetime.strptime(from_date, '%Y-%m-%d')
     to_date = datetime.strptime(to_date, '%Y-%m-%d')

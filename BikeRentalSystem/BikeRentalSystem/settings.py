@@ -130,3 +130,6 @@ AUTH_USER_MODEL = 'BikeUsers.Customer' # new
 
 LOGIN_REDIRECT_URL = 'CustomerHome'
 LOGOUT_REDIRECT_URL = 'CustomerLogin'
+DATETIME_FORMAT="%Y-%m-%d %H:%M"
+L10N=False
+USE_TZ=False
