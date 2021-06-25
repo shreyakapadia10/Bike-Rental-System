@@ -339,12 +339,8 @@ def check_bikes(request):
             to_time = request.POST.get('to_time', None)
             station_id = request.POST.get('station_id', None)
 
-
             # Calling user defined format_date function to format the date and time
             from_date, to_date, from_date_time, to_date_time = format_date(from_date, to_date, from_time, to_time)
-
-            # to_date_time = to_date_time + timedelta(days=1)
-            # print(to_date_time)
 
             # Calculatig duration
             duration = to_date_time - from_date_time
@@ -356,34 +352,18 @@ def check_bikes(request):
             minutes = divmod(hours[1], 60) # Use remainder of hours to calc minutes
 
             # Getting bikes which are on rent on given date and time of particular station
-            # To select between range the field name is combined with '__range' and start and end date is provided
+            filter_params = dict(from_date_time__lt=to_date_time, to_date_time__gt=from_date_time) # Providing filter condtions
 
-            # bike_rent_history = BikeRentHistory.objects.filter(
-            #     Q(from_date_time__gte=from_date_time) & Q(to_date_time__lte=to_date_time) |
-            #     Q(from_date_time__lte=from_date_time) & Q(to_date_time__gte=to_date_time) |
-            #     Q(from_date_time__range=(from_date_time, to_date_time)),
-            #     station=station_id)
-            
-            bike_rent_history = BikeRentHistory.objects.filter(
-                Q(from_date_time__date=from_date_time) &
-                Q(to_date_time__date= to_date_time) |
-                Q(from_date_time__range=(from_date_time, to_date_time)),
-                station=station_id)
-
-            print(bike_rent_history)
-
-            bikes_available = ""
+            bike_rent_history = BikeRentHistory.objects.filter(**filter_params, station=station_id)
 
             # if queryset is not empty
             if len(bike_rent_history) > 0:
+                # Excluding bikes which are on rent
                 bikes_available = bike.objects.exclude(id__in=bike_rent_history.values_list('bike_id', flat=True))
-
-                print(bikes_available)  
 
             # If no such bikes find between given date and time range
             else:
                 bikes_available = bike.objects.filter(station_id=station_id)
-                print(bikes_available)
 
             # Serializing into json
             bikes_json = serialize('json', bikes_available)

@@ -80,18 +80,18 @@ $('#availabilityForm').on('submit', function (e) {
     time2 = to_time.split(":")[0];
 
     /* Getting minutes from time */
-    minutes1 = from_time.split(":")[1];
-    minutes2 = to_time.split(":")[1];
+    // minutes1 = from_time.split(":")[1];
+    // minutes2 = to_time.split(":")[1];
 
     /* Getting date from time */
     date1 = from_date.split("-")[2];
     date2 = to_date.split("-")[2];
 
-    if(minutes1 != 00 || minutes2 != 00){
+    /*if(minutes1 != 00 || minutes2 != 00){
         alert('Please Select Time in round figures!')
     }
 
-    else if(time2 - time1 < 0 & date1 == date2){
+    else*/ if(time2 - time1 < 0 & date1 == date2){
         alert('Please Select Appropriate Time!')
     }
     
@@ -137,7 +137,7 @@ $('#availabilityForm').on('submit', function (e) {
                         hours_price = hours * available_bikes[i]['fields']['price_hr'];
                         minutes_price = (minutes * available_bikes[i]['fields']['price_hr'])/60;
 
-                        cost = days_price + hours_price + minutes_price;
+                        cost = parseFloat(days_price + hours_price + minutes_price).toFixed(2);
 
                         bike_details = function (i) {
                             return {
@@ -145,7 +145,7 @@ $('#availabilityForm').on('submit', function (e) {
                                 'name': available_bikes[i]['fields']['bikename'],
                                 'days': days,
                                 'hours': hours,
-                                'cost': hours * available_bikes[i]['fields']['price_hr'] + days * available_bikes[i]['fields']['price_day'] + (minutes * available_bikes[i]['fields']['price_hr'])/60,
+                                'cost': parseFloat(hours * available_bikes[i]['fields']['price_hr'] + days * available_bikes[i]['fields']['price_day'] + (minutes * available_bikes[i]['fields']['price_hr'])/60).toFixed(2),
                                 'from_date': from_date,
                                 'from_time': from_time,
                                 'to_date': to_date,
@@ -272,6 +272,7 @@ $('#MakePaymentBtn').on('click', function () {
             success: function (data) {
                 $('#PaymentModal').modal('hide');
                 alert(data.message);
+                location.reload();
             },
             
             failure: function (data) {

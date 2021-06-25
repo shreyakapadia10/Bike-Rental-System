@@ -109,4 +109,4 @@ class BikeRentHistory(models.Model):
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f'{self.bike.bikename} - from {self.from_date_time} to {self.to_date_time}'
+        return f'{self.customer.first_name} rented {self.bike.bikename} - from {self.from_date_time} to {self.to_date_time} at {self.payment.amount} rupees'
