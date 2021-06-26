@@ -87,15 +87,14 @@ $('#availabilityForm').on('submit', function (e) {
     date1 = from_date.split("-")[2];
     date2 = to_date.split("-")[2];
 
-    /*if(minutes1 != 00 || minutes2 != 00){
-        alert('Please Select Time in round figures!')
-    }
+    month1 = from_date.split("-")[1];
+    month2 = to_date.split("-")[1];
 
-    else*/ if(time2 - time1 < 0 & date1 == date2){
+    if(time2 - time1 < 0 & date1 == date2){
         alert('Please Select Appropriate Time!')
     }
     
-    else if(date2 - date1 < 0){
+    else if(date2 - date1 < 0 & month1==month2){
         alert('Please Select Appropriate Date!') 
     }
 
