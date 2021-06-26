@@ -10,9 +10,9 @@ urlpatterns = [
     path('register/', view=SignUpView.as_view(), name='CustomerRegister'),
     path('login/', view=SignIn.as_view(), name='CustomerLogin'),
     path('logout/', view=auth_view.LogoutView.as_view(template_name='BikeUsers/login.html'), name='CustomerLogout'),
-    path('bikeadd/', view=BikeAddView.as_view(), name='BikeRegister'),
-    path('bike/<int:pk>/update/', view=BikeUpdateView.as_view(), name='Bike-UpdateView'),
-    path('bike/<int:pk>/delete/', view=BikeDeleteView.as_view(), name='Bike-DeleteView'),
+    path('addbike/', view=BikeAddView.as_view(), name='BikeRegister'),
+    path('bike/update/<int:pk>/', view=BikeUpdateView.as_view(), name='Bike-UpdateView'),
+    path('bike/delete/<int:pk>/', view=BikeDeleteView.as_view(), name='Bike-DeleteView'),
     path('feedback/', view=Rettingadd.as_view(), name='BikeRegister'),
 
      path('password-reset/',
@@ -42,5 +42,7 @@ urlpatterns = [
     path('search_station/', view=search_station, name='SearchStation'),
     path('get_map/<int:pk>/', view=get_map, name='GetMap'),
     path('bike/<int:pk>/',view=Bikedetails.as_view(),name='ShowBikeDetails'),
+    path('payment/',view=MakePayment, name='Payment'),
+    path('check_bikes/', check_bikes, name='CheckBikes')
 ]
 

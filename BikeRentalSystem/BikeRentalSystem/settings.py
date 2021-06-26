@@ -139,3 +139,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER ='rinkal.bisagn.internship@gmail.com'
 EMAIL_HOST_PASSWORD = 'bisagn@106'
+DATETIME_FORMAT="%Y-%m-%d %H:%M"
+L10N=False
+USE_TZ=False

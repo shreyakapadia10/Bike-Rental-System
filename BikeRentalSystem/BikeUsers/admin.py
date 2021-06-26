@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Customer, State, City, bike, Rating,  Station
+from .models import BikeRentHistory, Customer, Payment, State, City, bike, Rating,  Station
 from .forms import CustomerCreationForm, CustomerChangeForm
 # Register your models here.
 
@@ -16,3 +16,5 @@ admin.site.register(City)
 admin.site.register(bike)
 admin.site.register(Rating)
 admin.site.register(Station)
+admin.site.register(Payment)
+admin.site.register(BikeRentHistory)

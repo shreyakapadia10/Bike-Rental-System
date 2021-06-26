@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.urls import reverse
+from PIL import Image
 
-from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 class State(models.Model):
     name = models.CharField(max_length=50)
@@ -37,34 +36,6 @@ class Customer(AbstractUser):
         return f"{self.first_name} {self.last_name} ({self.email})"
 
 
-class bike(models.Model):
-    BIKE_STATUS_CHOICES = [('A', 'Available'), ('R', 'Rent')] 
-    operatorid = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, help_text='Enter operator id')
-    bikename = models.CharField(max_length=50, help_text='Enter bike name')
-    brandname = models.CharField(max_length=50, help_text='Enter bike brand name')
-    price_hr = models.IntegerField(help_text='Enter bike price per hour')
-    price_day = models.IntegerField(help_text='Enter bike price per day', null=True)
-    registered_no = models.CharField(max_length=50, help_text='Enter bike registered number')
-    bike_image=models.ImageField(upload_to='bike_image', help_text='Add bike image', null=True)
-    bike_manufactured_date=models.DateField(help_text='Add Manufactured date of bike')
-    bikecolor = models.CharField(max_length=50, help_text='Enter bike color')
-    bikestatus = models.CharField(choices=BIKE_STATUS_CHOICES, max_length=1, default='W')
-    station_id = models.IntegerField(help_text='Enter bike Station id')
-    
-    def __str__(self) -> str:
-        return f" {self.bikename} ({self.brandname})"
-
-
-
-class Rating(models.Model):
-    suggestions=models.CharField(max_length=50, help_text='Enter your suggestion',default='Good')
-    star = models.IntegerField(help_text='Add ratings')
-
-    def __str__(self):
-        return str(self.pk)
-
-  
-
 class Station(models.Model):
     name = models.CharField(verbose_name="Name",max_length=100, null=True, blank=True)
     address = models.CharField(verbose_name="Address",max_length=100, null=True, blank=True)
@@ -75,5 +46,67 @@ class Station(models.Model):
     latitude = models.CharField(verbose_name="Latitude",max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.name} ({self.post_code})'
+        return f'{self.name}, {self.city} ({self.post_code})'
 
+
+class bike(models.Model):
+    BIKE_STATUS_CHOICES = [('A', 'Available'), ('R', 'On Rent')] 
+    operatorid = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, help_text='Enter operator id')
+    bikename = models.CharField(max_length=50, help_text='Enter bike name', verbose_name='Name of Bike')
+    brandname = models.CharField(max_length=50, help_text='Enter bike brand name', verbose_name='Brand Name')
+    price_hr = models.IntegerField(help_text='Enter bike price per hour', verbose_name='Price Per Hour')
+    price_day = models.IntegerField(help_text='Enter bike price per day', null=True, verbose_name='Price Per Day')
+    registered_no = models.CharField(max_length=50, help_text='Enter bike registered number', verbose_name='Bike Registration Number')
+    bike_image=models.ImageField(upload_to='bike_image', help_text='Add bike image', null=True)
+    bike_manufactured_date=models.DateField(help_text='Add Manufactured date of bike')
+    bikecolor = models.CharField(max_length=50, help_text='Enter bike color', verbose_name='Bike Color')
+    bikestatus = models.CharField(choices=BIKE_STATUS_CHOICES, max_length=1, default='A', verbose_name='Select Bike Status')
+    station_id = models.ForeignKey(Station, on_delete=models.CASCADE, verbose_name='Select Station Location')
+    
+    def __str__(self) -> str:
+        return f" {self.bikename} ({self.brandname})"
+
+    def save(self):
+        super().save()
+
+        img = Image.open(self.bike_image.path)
+
+        if img.height > 370 or img.width > 370:
+            output_size = (370, 370)
+            img.thumbnail(output_size)
+            img.save(self.bike_image.path)
+
+
+class Rating(models.Model):
+    suggestions=models.CharField(max_length=50, help_text='Enter your suggestion',default='Good')
+    star = models.IntegerField(help_text='Add ratings')
+
+    def __str__(self):
+        return str(self.pk)
+
+
+class Payment(models.Model):
+    PAYMENT_CHOICES = [('COD', 'Cash On Delivery')]
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, related_name='customer+')
+    operator = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, related_name='operator+')
+    bike = models.ForeignKey(bike, on_delete=models.CASCADE)
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    datetime = models.DateTimeField(auto_now_add=True)
+    mode = models.CharField(choices=PAYMENT_CHOICES, max_length=3)
+
+    def __str__(self) -> str:
+        return f'{self.customer.first_name} paid - {self.amount} ({self.mode}) on {self.datetime} for bike {self.bike.bikename} of {self.operator.first_name}'
+
+
+class BikeRentHistory(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, related_name='customer+')
+    operator = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, related_name='operator+')
+    from_date_time = models.DateTimeField(verbose_name='Select From Date Time:')
+    to_date_time = models.DateTimeField(verbose_name='Select To Date Time:')
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
+    bike = models.ForeignKey(bike, on_delete=models.CASCADE)
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f'{self.customer.first_name} rented {self.bike.bikename} - from {self.from_date_time} to {self.to_date_time} at {self.payment.amount} rupees'
