@@ -415,3 +415,12 @@ def format_date(from_date, to_date, from_time, to_time):
     to_date = datetime.strptime(to_date, '%Y-%m-%d')
 
     return (from_date, to_date, from_date_time, to_date_time)
+
+
+def view_bike_history(request):
+    if request.user.is_authenticated:
+        bike_rent_history = BikeRentHistory.objects.filter(customer=request.user)
+        
+        return render(request=request, template_name='BikeUsers/view_bike_history.html', context={'histories': bike_rent_history})
+
+    return redirect('CustomerLogin')

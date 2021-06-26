@@ -14,8 +14,7 @@ urlpatterns = [
     path('bike/update/<int:pk>/', view=BikeUpdateView.as_view(), name='Bike-UpdateView'),
     path('bike/delete/<int:pk>/', view=BikeDeleteView.as_view(), name='Bike-DeleteView'),
     path('feedback/', view=Rettingadd.as_view(), name='BikeRegister'),
-
-     path('password-reset/',
+    path('password-reset/',
          auth_views.PasswordResetView.as_view(
              template_name='BikeUsers/password/password_reset.html'
          ),
@@ -37,12 +36,13 @@ urlpatterns = [
          name='password_reset_complete'),
     path('viewbike/',bikeinfo),
     path('viewbike/<int:pk>',bikeinfo),
-    path('update_customer/', CustomerUpdateView),
+    path('update_customer/', CustomerUpdateView, name="ProfileUpdate"),
     path('search_city/', view=search_city, name='SearchCity'),
     path('search_station/', view=search_station, name='SearchStation'),
     path('get_map/<int:pk>/', view=get_map, name='GetMap'),
     path('bike/<int:pk>/',view=Bikedetails.as_view(),name='ShowBikeDetails'),
     path('payment/',view=MakePayment, name='Payment'),
-    path('check_bikes/', check_bikes, name='CheckBikes')
+    path('check_bikes/', check_bikes, name='CheckBikes'),
+    path('history/', view_bike_history, name='ViewBikeHistory'),
 ]
 

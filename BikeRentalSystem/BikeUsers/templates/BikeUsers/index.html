@@ -1,25 +1,14 @@
-{% extends 'BikeUsers/base.html' %}
-{% load static %}
-{% block css %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-{% endblock css %}
-{% block content %}
+{% extends 'BikeUsers/base.html' %} {% load static %} {% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}"> {% endblock css %} {% block content %}
 <!-- To print warning/success alert -->
-{% if messages %}
-
-{% for message in messages %}
+{% if messages %} {% for message in messages %}
 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
     <strong>{{ message }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
-{% endfor %}
-{% endif %}
-
-{% if user.is_authenticated %}
+{% endfor %} {% endif %} {% if user.is_authenticated %}
 <h1>Welcome, {{user.username}}! </h1>
-{% endif %}
-
-{{ stations|json_script:"data" }}
+{% endif %} {{ stations|json_script:"data" }}
 
 <div class="btn-group my-3 form-center" role="group" aria-label="Basic outlined example">
     <button type="button" class="btn btn-outline-primary" id="mapSearch">Search by Maps</button>
@@ -32,8 +21,7 @@
 <div id="searchOutput" class="form-center">
     <form method='POST' class="col-md-12 my-3 form-center" id='pinCodeForm' style="display: none;">
         {% csrf_token %}
-        <input type='text' min=6 max=6 name='pincodeText' id='pincodeText' class="form-control mx-3"
-            placeholder="Enter Pincode" required>
+        <input type='text' min=6 max=6 name='pincodeText' id='pincodeText' class="form-control mx-3" placeholder="Enter Pincode" autocomplete="off" required>
 
         <input type='submit' class="btn btn-warning" id='pincodeBtn' name='pincodeBtn' value="Search">
     </form>
@@ -44,8 +32,7 @@
 
 <div class="container mb-3 col-md-12" id="CityForm" style="display: none;">
     <form class="row col-md-12" method="post" id="mapsform">
-        {% csrf_token %}
-        {{form}}
+        {% csrf_token %} {{form}}
     </form>
 </div>
 
@@ -55,8 +42,7 @@
 
 <div id='searchBoxContainer' style="display: none;">
     <label for="searchLabel" class="form-label">Search Location:</label>
-    <input type='text' id='searchBox' class="form-control mb-3" placeholder="Start typing location..."
-        autocomplete="off" />
+    <input type='text' id='searchBox' class="form-control mb-3" placeholder="Start typing location..." autocomplete="off" />
 </div>
 <!-- Showing form for maps search end -->
 
@@ -83,9 +69,7 @@
 <div id="myMap" style="position:relative;width:1300px;height:600px;" class="mb-3"></div>
 <!-- Showing stations on map end -->
 
-{% endblock content %}
-
-{% block js %}
+{% endblock content %} {% block js %}
 <!-- define required variables in template -->
 <script>
     var URL = "{% url 'SearchStation' %}";
@@ -94,9 +78,7 @@
 <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
 <script src="{% static 'js/home.js' %}"></script>
 
-<script type='text/javascript'
-    src='https://www.bing.com/api/maps/mapcontrol?key=AoCKO8_fba-FuLiqndRFZjJCyLW6_xi7ABuWX_PJFzffKtBFStyV5kPFPTWK-ADu&callback=loadMapScenario'
-    async defer></script>
+<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AoCKO8_fba-FuLiqndRFZjJCyLW6_xi7ABuWX_PJFzffKtBFStyV5kPFPTWK-ADu&callback=loadMapScenario' async defer></script>
 
 <script id="data" type="application/json"></script>
 {% endblock js %}
