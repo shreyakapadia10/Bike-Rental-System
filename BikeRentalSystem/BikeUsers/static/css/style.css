@@ -13,7 +13,7 @@
     border: 0 !important;
 }
 
-.row:: after {
+.row::after {
     content: "";
     display: table;
 }
