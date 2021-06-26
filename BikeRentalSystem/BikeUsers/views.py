@@ -299,8 +299,8 @@ def add_station(request):
 		}
 	return render(request, 'BikeUsers/add_station.html', context)
 
-def bikeinfo(request):
-	bikes=bike.objects.all()
+def bikeinfo(request, pk):
+	bikes=bike.objects.filter(station_id=pk)
 	paginate_by = 2
 	return render(request, 'BikeUsers/viewbike.html', {'viewbike': bikes })
 

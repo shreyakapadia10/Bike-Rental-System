@@ -150,6 +150,7 @@ $('#pinCodeForm').on('submit', function (e) {
                     <td>${response[i].fields.post_code}</td>
                     <td>${response[i].fields.address}</td>
                     <td><a href = 'get_map/${response[i].pk}' target='_blank'>Show Directions</a></td>
+                    <td><a href = 'viewbike/${response[i].pk}' target='_blank'>Show Bikes</a></td>
                     </tr>`
                 }
             }
@@ -231,6 +232,7 @@ function getStations(){
                     <td>${response[i].fields.post_code}</td>
                     <td>${response[i].fields.address}</td>
                     <td><a href = 'get_map/${response[i].pk}' target='_blank'>Show Directions</a></td>
+                    <td><a href = 'viewbike/${response[i].pk}' target='_blank'>Show Bikes</a></td>
                     </tr>`
                 }
             }
