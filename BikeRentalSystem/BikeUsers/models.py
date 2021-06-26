@@ -38,7 +38,7 @@ class Customer(AbstractUser):
 
 class Station(models.Model):
     name = models.CharField(verbose_name="Name",max_length=100, null=True, blank=True)
-    address = models.CharField(verbose_name="Address",max_length=100, null=True, blank=True)
+    address = models.CharField(verbose_name="Address",max_length=300, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, help_text='Select your city')
     post_code = models.CharField(verbose_name="Post Code",max_length=8, null=True, blank=True)
     country = models.CharField(verbose_name="Country",max_length=100, null=True, blank=True)	
