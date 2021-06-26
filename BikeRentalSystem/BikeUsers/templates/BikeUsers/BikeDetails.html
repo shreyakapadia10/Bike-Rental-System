@@ -1,0 +1,92 @@
+{% extends 'BikeUsers/base.html' %}
+{% load static %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+<div id="box-container">
+  <div id="box-1">
+
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{{ object.bike_image.url }}" class="d-block w-100" id= "img1" alt="image">
+        </div>
+        <div class="carousel-item">
+          <img src="..." class="d-block w-100" alt="image">
+        </div>
+        <div class="carousel-item">
+          <img src="..." class="d-block w-100" alt="image">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+  </div>
+  <div id="box-2">
+
+    <div class="centered">
+      <h1 class="text-center">{{object.bikename}}</h1>
+    <h2 class="text-center" >{{object.brandname}}</h2>
+    <br>
+      <!-- Printing Form fields -->
+        <div class="col-md-12" class="text-center"> 
+          <div class="container">
+              <div class="row" style="border:rgba(0, 0, 0, 0.23)">
+                <div class="col-6" style="font-size:130%;">Price per hour:</div>
+                <div class="col-6" style="font-size:120%;">{{object.price_hr}}</div>
+              </div>
+              <div class="row">
+                <div class="col-6" style="font-size:130%;">Price per Day:</div>
+                <div class="col-6" style="font-size:120%;">{{object.price_day}}</div>
+              </div>
+              <div class="row">
+                <div class="col-6" style="font-size:130%;">registered_no </div>
+                <div class="col-6"style="font-size:120%;">{{object.registered_no}}</div>
+              </div>
+              <div class="row">
+                <div class="col-6" style="font-size:130%;">bike_manufactured_date </div>
+                <div class="col-6"style="font-size:120%;">{{object.bike_manufactured_date}}</div>
+              </div>
+              <div class="row">
+                <div class="col-6" style="font-size:130%;">bikecolor</div>
+                <div class="col-6" style="font-size:120%;">{{object.bikecolor}}</div>
+              </div>
+              <div class="row">
+                <div class="col-6" style="font-size:130%;">bikestatus</div>
+                <div class="col-6" style="font-size:120%;">{{object.bikestatus}}</div>
+              </div>
+            </div>
+
+      <br><br>  
+    </div>
+    <div class="row">
+      <div  style="text-align: center;" >
+        <button type="button"><a href="#" class="btn btn-default btn-flat">Send Request</a></button>
+      </div>
+     
+    </div>
+  </div>
+
+    </div>
+
+  </div>
+</div> 
+
+{% endblock content %}
+
+{% block js %}
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock js %}

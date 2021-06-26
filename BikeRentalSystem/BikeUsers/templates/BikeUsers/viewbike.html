@@ -1,0 +1,147 @@
+{% extends 'BikeUsers/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+
+<div class="container text-center my-3">
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DateTimeModal">
+    Select Date and Time
+  </button>
+</div>
+<!-- Printing all available bikes start (using js)  -->
+<div class="row col-md-12" id="availableBikes">
+</div>
+<!-- Printing all available bikes end (using js)  -->
+
+
+{% if is_paginated %}
+
+{% if page_obj.has_previous %}
+<a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+{% endif %}
+
+{% for num in page_obj.paginator.page_range %}
+{% if page_obj.number == num %}
+<a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a class="btn btn-outline-info mb-4"
+  href="?page={{ num }}">{{ num }}</a>
+  {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+  {% endif %}
+
+  {% endif %}
+
+  <!-- Date Selection Modal Start -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="DateTimeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="DateTimeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="DateTimeModalLabel">Select Date and Time</h5>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+        </div>
+        <div class="modal-body">
+          <!-- Form Starts Here -->
+          <form method="POST" id="availabilityForm" class="needs-validation" novalidate> {% csrf_token %}
+            <div class="form-floating mb-3">
+              <input type="date" class="form-control" id="floatingFromDate" placeholder="Select From Date" required>
+              <label for="floatingFromDate">From Date</label>
+              <div class="valid-feedback mt-2">
+                Looks good!
+              </div>
+
+              <div class="invalid-feedback">
+                <p>Please select appropriate date</p>
+              </div>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input type="time" class="form-control" id="floatingFromTime" placeholder="Select From Time" required>
+              <label for="floatingFromTime">From Time</label>
+              <div class="valid-feedback mt-2">
+                Looks good!
+              </div>
+
+              <div class="invalid-feedback">
+                <p>Please Select Time in round figures</p>
+              </div>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input type="date" class="form-control" id="floatingToDate" placeholder="Select To Date" required>
+              <label for="floatingToDate">To Date</label>
+              <div class="valid-feedback mt-2">
+                Looks good!
+              </div>
+
+              <div class="invalid-feedback">
+                <p>Please select appropriate date</p>
+              </div>
+            </div>
+
+            <div class="form-floating">
+              <input type="time" class="form-control" id="floatingToTime" placeholder="Select From Time" required>
+              <label for="floatingToTime">To Time</label>
+              <div class="valid-feedback mt-2">
+                Looks good!
+              </div>
+
+              <div class="invalid-feedback">
+                <p>Please Select Time in round figures</p>
+              </div>
+            </div>
+            <!-- Form Ends Here -->
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <input type="submit" class="btn btn-primary" value="Check Bike Availability" id="checkAvailabilityBtn">
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Date Selection Modal End -->
+
+  <!--Payment Modal Start -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="PaymentModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
+    aria-labelledby="PaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="PaymentModalLabel">Make Your Payment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="PaymentModalBody">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Make Payment" id="MakePaymentBtn">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Payment Modal End -->
+
+  {{ station|json_script:"station_id" }}
+
+  {% endblock content %}
+
+  {% block js %}
+  <script id="station_id" type="application/json"></script>
+  <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+  <script src="//jonthornton.github.io/jquery-timepicker/jquery.timepicker.js"></script>
+  <script src="{% static 'js/jquery-ui.js' %}"></script>
+  <script src="{% static 'js/check_bike.js' %}"></script>
+  {% endblock js %}

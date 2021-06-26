@@ -1,0 +1,28 @@
+{% extends 'BikeUsers/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+
+{{ station|json_script:"data" }}
+
+<div class="row">
+    <div id='routeInfoPanel'></div>
+    <div class="col-md-4" id='directionsItinerary'></div>
+    <div class="col-md-8" id="myMap"></div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<!-- define required variables in template -->
+
+<script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+<script src="{% static 'js/get_map.js' %}"></script>
+
+<script type='text/javascript'
+    src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AoCKO8_fba-FuLiqndRFZjJCyLW6_xi7ABuWX_PJFzffKtBFStyV5kPFPTWK-ADu'
+    async defer></script>
+
+<script id="data" type="application/json"></script>
+{% endblock js %}
