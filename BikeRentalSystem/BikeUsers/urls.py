@@ -13,7 +13,7 @@ urlpatterns = [
     path('addbike/', view=BikeAddView.as_view(), name='BikeRegister'),
     path('bike/update/<int:pk>/', view=BikeUpdateView.as_view(), name='Bike-UpdateView'),
     path('bike/delete/<int:pk>/', view=BikeDeleteView.as_view(), name='Bike-DeleteView'),
-    path('feedback/', view=Rettingadd.as_view(), name='BikeRegister'),
+    path('feedback/', view=Rettingadd.as_view(), name='BikeFeedback'),
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='BikeUsers/password/password_reset.html'), name='password_reset'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='BikeUsers/password/password_reset_done.html'), name='password_reset_done'),
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='BikeUsers/password/password_reset_confirm.html'), name='password_reset_confirm'),

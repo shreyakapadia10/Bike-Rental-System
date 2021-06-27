@@ -4,8 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect, render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from django.contrib.auth import views as auth_view
-from django.http import JsonResponse, HttpResponse
+from django.contrib.auth import authenticate, views as auth_view
+from django.http import JsonResponse
 from django.views.generic import DetailView
 from django.core.serializers import serialize
 from django.contrib.auth.decorators import login_required
@@ -106,7 +106,16 @@ class SignUpView(CreateView):
 	form_class = CustomerCreationForm
 	success_url = reverse_lazy('CustomerLogin')
 	template_name = 'BikeUsers/register.html'
-	success_message = 'Registered Successfully! You can now login with your username!'
+	success_message = 'Registered Successfully!'
+
+	def form_valid(self, form):
+		messages.success(self.request, self.success_message)
+		return super().form_valid(form)
+
+	def get_form_kwargs(self):
+		form_kwargs = super().get_form_kwargs()
+		form_kwargs['request'] = self.request
+		return form_kwargs
 
 
 '''SignIn - This class based view is used for user login, it uses login.html and upon successful login it redirects to home page, also if the user is authenticated the it redirects user to home page automatically'''
@@ -116,6 +125,10 @@ class SignIn(auth_view.LoginView):
 	template_name = 'BikeUsers/login.html'
 	success_message = 'Logged in successfully!'
 	redirect_authenticated_user = True
+
+	def form_valid(self, form):
+		messages.success(self.request, self.success_message)
+		return super().form_valid(form)
 
 
 '''CustomerUpdateView - This function based view is used to update user details, it requires the user to be logged in and if the form details are valid then it'll update user details and redirect user to Home page, it renders update_customer.html'''
@@ -128,7 +141,7 @@ def CustomerUpdateView(request):
 			messages.success(request,'Your Profile has been updated!')
 			return redirect('CustomerHome')
 		else:
-			 messages.error(request,'Please Enter Correct')
+			messages.error(request,'Please Enter Correct Information')
 	else:
 		u_form = CustomerUpdateForm(instance=request.user)
 
@@ -191,6 +204,10 @@ class Rettingadd(LoginRequiredMixin, CreateView):
 	success_url = reverse_lazy('CustomerLogin')
 	template_name = 'BikeUsers/feedback.html'
 	success_message = 'Thank you for your valueable response!'
+
+	def form_valid(self, form):
+		messages.success(self.request, self.success_message)
+		return super().form_valid(form)
 
 
 '''AddStationView - This class based view is using MapsForm as form and it can be used to add new  bike station details, it uses add_station.html and redirects user to the same page'''

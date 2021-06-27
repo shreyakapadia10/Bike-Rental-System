@@ -1,26 +1,49 @@
 {% extends 'BikeUsers/base.html' %} {% load static %} {% load crispy_forms_tags %} {% block css %}
 <link rel="stylesheet" href="{% static 'css/style1.css' %}">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"> {% endblock css %} {% block content %}
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"> {% endblock css %}
+{% block content %}
 <h1 class="text-center mt-2">Please Provide Your Feedback</h1>
 <div class="stars">
+    <!-- To print any error for form validation -->
+    {% if form.errors %}
+    {% for field in form %}
+    {% for error in field.errors %}
+    <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+    </div>
+    {% endfor %}
+    {% endfor %}
 
-    <form method="POST">
+    {% for error in form.non_field_errors %}
+    <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <form method="POST" class="row g-3 mt-2 needs-validation form-center">
         {% csrf_token %}
-        <input class="star star-5" id="star-5" type="radio" name="star" value="5" />
-        <label class="star star-5" for="star-5"></label>
-        <input class="star star-4" id="star-4" type="radio" name="star" value="4" />
-        <label class="star star-4" for="star-4"></label>
-        <input class="star star-3" id="star-3" type="radio" name="star" value="3" />
-        <label class="star star-3" for="star-3"></label>
-        <input class="star star-2" id="star-2" type="radio" name="star" value="2" />
-        <label class="star star-2" for="star-2"></label>
-        <input class="star star-1" id="star-1" type="radio" name="star" value="1" />
-        <label class="star star-1" for="star-1"></label>
-        <lable>Any suggestions</lable>
-        <textarea class="star star-1" name="suggestions"></textarea>
-        <br>
-        <input type="submit" name="submit" />
+        <div class="container-fluid">
+            <input class="star star-5" id="star-5" type="radio" name="star" value="5" />
+            <label class="star star-5" for="star-5"></label>
+            <input class="star star-4" id="star-4" type="radio" name="star" value="4" />
+            <label class="star star-4" for="star-4"></label>
+            <input class="star star-3" id="star-3" type="radio" name="star" value="3" />
+            <label class="star star-3" for="star-3"></label>
+            <input class="star star-2" id="star-2" type="radio" name="star" value="2" />
+            <label class="star star-2" for="star-2"></label>
+            <input class="star star-1" id="star-1" type="radio" name="star" value="1" />
+            <label class="star star-1" for="star-1"></label>
+
+            <textarea class="form-control mb-3" placeholder="Leave your suggestions here" name="suggestions" style="height: 100px; width: 450px;"></textarea>
+
+            <input type="submit" name="submit" class="btn btn-primary" />
+        </div>
     </form>
-    {% endblock content %}
 </div>
+{% endblock content %}
+
+
+{% block js %}
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock js %}

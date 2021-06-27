@@ -1,22 +1,30 @@
 from django import forms
-from .models import BikeRentHistory, City, Customer, State, Station, bike
+from .models import *
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from functools import partial
-
+from django.contrib.auth import authenticate, login
 
 class CustomerCreationForm(UserCreationForm):
-    first_name = forms.CharField(max_length=50, required=True, help_text='Enter your first name')
-    last_name = forms.CharField(max_length=50, required=True, help_text='Enter your last name')
-
     class Meta:
         model = Customer
         fields = ['role','first_name', 'last_name', 'username', 'contact', 'address', 'pincode', 'email', 'proof', 'state', 'city']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, request, *args, **kwargs):
         super(CustomerCreationForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+        self.request = request
 
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        if commit:
+            auth_user = authenticate(
+                username=self.cleaned_data['username'], 
+                password=self.cleaned_data['password1']
+            )
+            login(self.request, auth_user)
+
+        return user
 
 DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 class BikeRegistrationForm(forms.ModelForm):

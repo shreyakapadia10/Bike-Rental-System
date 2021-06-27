@@ -21,7 +21,8 @@ class City(models.Model):
 class Customer(AbstractUser):
     STATUS_CHOICES = [('P', 'Pending'), ('V', 'Verified')]
     USER_CHOICES = [('C', 'Customer'), ('O', 'Operator')]
-
+    first_name = models.CharField(max_length=50, help_text='Enter your first name')
+    last_name = models.CharField(max_length=50, help_text='Enter your last name')
     email = models.EmailField(help_text='Enter your email id', unique=True)
     contact = models.IntegerField(help_text='Enter your contact number', null=True)
     address = models.CharField(max_length=200, help_text='Enter your address', null=True)
@@ -82,7 +83,7 @@ class Rating(models.Model):
     star = models.IntegerField(help_text='Add ratings')
 
     def __str__(self):
-        return str(self.pk)
+        return f'{self.suggestions} - {self.star} stars'
 
 
 class Payment(models.Model):
