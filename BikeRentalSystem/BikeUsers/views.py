@@ -2,6 +2,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, views as auth_view
@@ -9,7 +10,6 @@ from django.http import JsonResponse
 from django.views.generic import DetailView
 from django.core.serializers import serialize
 from django.contrib.auth.decorators import login_required
-import json
 from .models import *
 from .forms import *
 from datetime import datetime
@@ -104,19 +104,20 @@ def get_map(request, pk):
 '''SignUpView - This class based view is used for user registration, it uses register.html and upon successful registration it redirects to login page'''
 class SignUpView(CreateView):
 	form_class = CustomerCreationForm
-	success_url = reverse_lazy('CustomerLogin')
 	template_name = 'BikeUsers/register.html'
 	success_message = 'Registered Successfully!'
 
 	def form_valid(self, form):
+		#save the new user first
+		form.save()
 		messages.success(self.request, self.success_message)
-		return super().form_valid(form)
-
-	def get_form_kwargs(self):
-		form_kwargs = super().get_form_kwargs()
-		form_kwargs['request'] = self.request
-		return form_kwargs
-
+		#get the username and password
+		username = self.request.POST['username']
+		password = self.request.POST['password1']
+		#authenticate user then login
+		user = authenticate(username=username, password=password)
+		login(self.request, user)
+		return redirect('CustomerHome')
 
 '''SignIn - This class based view is used for user login, it uses login.html and upon successful login it redirects to home page, also if the user is authenticated the it redirects user to home page automatically'''
 class SignIn(auth_view.LoginView):
@@ -135,13 +136,12 @@ class SignIn(auth_view.LoginView):
 @login_required
 def CustomerUpdateView(request):
 	if request.method == 'POST':
-		u_form = CustomerUpdateForm(request.POST,instance=request.user)
+		u_form = CustomerUpdateForm(request.POST, request.FILES, instance=request.user)
+		
 		if u_form.is_valid():
 			u_form.save()
-			messages.success(request,'Your Profile has been updated!')
-			return redirect('CustomerHome')
-		else:
-			messages.error(request,'Please Enter Correct Information')
+			messages.success(request,'Your Profile has been updated successfully!')
+			return redirect('ProfileUpdate')
 	else:
 		u_form = CustomerUpdateForm(instance=request.user)
 
