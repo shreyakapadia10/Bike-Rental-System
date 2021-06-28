@@ -4,4 +4,5 @@ from BikeUsers.views import SignIn
 
 urlpatterns = [
     path('login/', view=SignIn.as_view(), name='OperatorLogin'),
+    path('dashboard/', view=SignIn.as_view(), name='OperatorDashboard'),
 ]

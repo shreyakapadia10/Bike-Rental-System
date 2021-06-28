@@ -36,10 +36,9 @@ class CustomerChangeForm(UserChangeForm):
 
 
 '''Add Bike Details Form'''
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+DateInput = partial(forms.DateInput, {'class': 'datepicker', 'autocomplete': 'off'})
 class BikeRegistrationForm(forms.ModelForm):
     bike_manufactured_date = forms.DateField(widget=DateInput())
-    bike_image=forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
     class Meta:
         model = bike
         exclude=['operatorid']
@@ -52,7 +51,7 @@ class BikeRegistrationForm(forms.ModelForm):
     
 
 '''Update Bike Form'''
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+DateInput = partial(forms.DateInput, {'class': 'datepicker', 'autocomplete': 'off'})
 class BikeUpdateForm(forms.ModelForm):
     bike_manufactured_date = forms.DateField(widget=DateInput())
     class Meta:

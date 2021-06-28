@@ -2,10 +2,9 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect, render
-from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from django.contrib.auth import authenticate, views as auth_view
+from django.contrib.auth import authenticate, login, views as auth_view
 from django.http import JsonResponse
 from django.views.generic import DetailView
 from django.core.serializers import serialize
@@ -128,6 +127,11 @@ class SignIn(auth_view.LoginView):
 	redirect_authenticated_user = True
 
 	def form_valid(self, form):
+		username = form.cleaned_data.get('username')
+		password = form.cleaned_data.get('password')
+		user = authenticate(self.request, username=username, password=password)
+		if user.role == 'O':
+			return redirect('OperatorDashboard')
 		messages.success(self.request, self.success_message)
 		return super().form_valid(form)
 
@@ -322,7 +326,8 @@ def MakePayment(request):
 
 			try:
 				Bike = bike.objects.get(id=bikeId)
-
+				Bike.bikestatus = 'R'
+				Bike.save()
 				payment = Payment.objects.create(customer=request.user, operator=Bike.operatorid, bike=Bike, station=Bike.station_id, amount=cost, mode=payment_mode)
 
 				payment.save()

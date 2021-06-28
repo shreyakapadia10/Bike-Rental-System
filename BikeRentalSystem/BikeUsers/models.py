@@ -55,8 +55,8 @@ class bike(models.Model):
     operatorid = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, help_text='Enter operator id')
     bikename = models.CharField(max_length=50, help_text='Enter bike name', verbose_name='Name of Bike')
     brandname = models.CharField(max_length=50, help_text='Enter bike brand name', verbose_name='Brand Name')
-    price_hr = models.IntegerField(help_text='Enter bike price per hour', verbose_name='Price Per Hour')
-    price_day = models.IntegerField(help_text='Enter bike price per day', null=True, verbose_name='Price Per Day')
+    price_hr = models.PositiveIntegerField(help_text='Enter bike price per hour', verbose_name='Price Per Hour')
+    price_day = models.PositiveIntegerField(help_text='Enter bike price per day', null=True, verbose_name='Price Per Day')
     registered_no = models.CharField(max_length=50, help_text='Enter bike registered number', verbose_name='Bike Registration Number')
     bike_image=models.ImageField(upload_to='bike_image', help_text='Add bike image', null=True)
     bike_manufactured_date=models.DateField(help_text='Add Manufactured date of bike')
@@ -66,16 +66,6 @@ class bike(models.Model):
     
     def __str__(self) -> str:
         return f" {self.bikename} ({self.brandname})"
-
-    def save(self):
-        super().save()
-
-        img = Image.open(self.bike_image.path)
-
-        if img.height > 370 or img.width > 370:
-            output_size = (370, 370)
-            img.thumbnail(output_size)
-            img.save(self.bike_image.path)
 
 
 class Rating(models.Model):
