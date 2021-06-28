@@ -1,0 +1,46 @@
+{% extends 'BikeOperators/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+
+<h1 class="text-center">Rented Bike History</h1>
+<!-- <div class="col-lg-12 grid-margin stretch-card"> -->
+  <div class="card">
+    <div class="card-body">
+
+      <div class="table-responsive" >
+        <table class="table table-striped ">
+          <thead>
+            <tr>
+              <th> Customer</th>
+              <th>from_date_time</th>
+              <th>to_date_time</th>
+              <th>payment</th>
+              <th>bike</th>
+              <th>station</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in posts %}
+            <tr> 
+              <th>{{post.customer.first_name}}</th>
+              <th>{{post.from_date_time}}</th>
+              <th>{{post.to_date_time}}</th>
+              <th>{{post.payment.amount}}</th>
+              <th>{{post.bike}}</th>
+              <th>{{post.station}}</th>  
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  <!-- </div> -->
+{% endblock content %}
+
+{% block js %}
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock js %}
