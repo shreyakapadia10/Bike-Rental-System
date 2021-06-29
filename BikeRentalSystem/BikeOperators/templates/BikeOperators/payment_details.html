@@ -1,0 +1,43 @@
+{% extends 'BikeOperators/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+
+<h1 class="text-center">Payments Details</h1>
+<div class="card">
+  <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>customer</th>
+              <th>bike</th>
+              <th>station</th>
+              <th>datetime</th>
+              <th>mode</th>
+              <th>amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payment in payments %}
+            <tr> 
+              <th>{{payment.customer.first_name}}</th>
+              <th>{{payment.bike}}</th>
+              <th>{{payment.station}}</th>
+              <th>{{payment.datetime}}</th>
+              <th>{{payment.mode}}</th>
+              <th>{{payment.amount}}</th>  
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block js %}
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock js %}
