@@ -1,48 +1,45 @@
-{% extends 'BikeUsers/base.html' %}
+{% extends 'BikeOperators/base.html' %}
 {% load static %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 {% block content %}
 
-<div class="col-lg-6 grid-margin stretch-card">
-  <div class="card">
-    <div class="card-body">
-      <h4 class="card-title"><h3>Available Bikes</h3></h4>
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Bike Name</th>
-              <th>Brand Name</th>
-              <th>Price Hour</th>
-              <th>Price Day</th>
-              <th>registered No</th>
-              <th>Bike Color</th>
-              <th>Bike Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for b in viewbike %}
-            {% ifequal  b.bikestatus "A" %}
-            <tr>
-              <td>{{ b.bikename }}</td>
-              <td>{{ b.brandname }}</td>
-              <td>{{ b.price_hr }}</td>
-              <td>{{ b.price_day }}</td>
-              <td>{{ b.registered_no }}</td>
-              <td>{{ b.bikecolor }}</td>
-              <td>{{ b.bikestatus }}</td>
-              <td><label class="btn btn-primary">View</label></td>
-              <td><label class="btn btn-primary">Delete</label></td>
-            </tr>
-            {% endifequal %}
-  
-            {% endfor %}
-          </tbody>
-        </table>
-        {% endblock content %}
-      </div>
+<div class="card">
+  <div class="card-body">
+    {% if viewbike %}
+    <h4 class="card-title">
+      <h3 class="text-center">Available Bikes</h3>
+    </h4>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover table-striped">
+        <thead>
+          <tr class="text-center">
+            <th>Bike Name</th>
+            <th>Brand Name</th>
+            <th>Price Per Hour</th>
+            <th>Price Per Day</th>
+            <th>Registration No.</th>
+            <th>Bike Color</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in viewbike %}
+          <tr class="text-center">
+            <td>{{ b.bikename }}</td>
+            <td>{{ b.brandname }}</td>
+            <td>{{ b.price_hr }}</td>
+            <td>{{ b.price_day }}</td>
+            <td>{{ b.registered_no }}</td>
+            <td>{{ b.bikecolor }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+    {% else %}
+    <h3 class="text-center">No bikes are available at this moment!</h3>
+    {% endif %}
   </div>
 </div>
+{% endblock content %}

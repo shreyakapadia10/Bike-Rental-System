@@ -1,9 +1,9 @@
 # Necessary imports
-from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, views as auth_view
 from django.http import JsonResponse
@@ -18,15 +18,17 @@ from datetime import datetime
 ''' Home Page View - It will fetch stations details to show them to maps and render index.html file, along with that it returns stations and empty form for city based search if the user is logged in; else only returns empty city form'''
 def home(request):
 	if request.user.is_authenticated:
-		stations = Station.objects.all()
-		if len(stations) > 0:
-			station_json = serialize('json', stations)
-			form = CityForm()
-			return render(request, 'BikeUsers/index.html', {'stations': station_json, 'form': form})
+		if request.user.role == 'C':
+			stations = Station.objects.all()
+			if len(stations) > 0:
+				station_json = serialize('json', stations)
+				form = CityForm()
+				return render(request, 'BikeUsers/index.html', {'stations': station_json, 'form': form})
+			else:
+				form = CityForm()
+				return render(request, 'BikeUsers/index.html', {'stations': '', 'form': form})
 		else:
-			form = CityForm()
-			return render(request, 'BikeUsers/index.html', {'stations': '', 'form': form})
-
+			return redirect('OperatorDashboard')
 	else:
 		return redirect('CustomerLogin')
 
@@ -125,7 +127,8 @@ class SignIn(auth_view.LoginView):
 	# success_url = reverse_lazy('CustomerHome')
 	template_name = 'BikeUsers/login.html'
 	success_message = 'Logged in successfully!'
-	redirect_authenticated_user = True
+	# redirect_authenticated_user = True
+
 
 	def form_valid(self, form):
 		messages.success(self.request, self.success_message)
@@ -161,57 +164,6 @@ def CustomerUpdateView(request):
 	return render(request, 'BikeUsers/update_customer.html',context)
 
 
-'''BikeAddView - This class will require user to be logged in and allows the operator to add bike details, it uses bikeadd.html file as template and redirect user to the same page'''
-class BikeAddView(LoginRequiredMixin, CreateView):
-	form_class = BikeRegistrationForm
-	success_url = reverse_lazy('BikeRegister')
-	template_name = 'BikeUsers/bikeadd.html'
-	success_message = 'Bike Details Added Successfully!'
-	def form_valid(self, form):
-		form.instance.operatorid = self.request.user
-		messages.success(self.request, self.success_message)
-		return super().form_valid(form)
-
-
-'''BikeUpdateView - This class will require user to be logged in as well as it also checks that whether the user is eligible to update the bike details and allows the operator to update bike details, it uses bikeadd.html file as template and redirect user to the same page'''
-class BikeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-	model=bike
-	form_class = BikeUpdateForm
-	success_url = reverse_lazy('BikeRegister')
-	template_name = 'BikeUsers/bikeadd.html'
-	success_message = 'Bike Details Updated Successfully!'
-	def form_valid(self, form):
-		form.instance.operatorid = self.request.user
-		messages.success(self.request, self.success_message)
-		return super().form_valid(form)
-
-	def test_func(self):
-		bike= self.get_object()
-
-		if bike.operatorid == self.request.user:
-			return True
-		return False
-
-
-'''BikeDeleteView - This class will require user to be logged in as well as it also checks that whether the user is eligible to delete the bike details and allows the operator to delete bike details, it uses bike_detail_confirm_delete.html file as template and redirect user to the login page'''
-class BikeDeleteView(LoginRequiredMixin, UserPassesTestMixin,DeleteView):
-	model=bike
-	success_url = reverse_lazy('CustomerLogin')
-	template_name = 'BikeUsers/bike_detail_confirm_delete.html'
-	success_message = "Bike Details Deleted Successfully!"
-
-	def delete(self, request, *args, **kwargs):
-		messages.success(request=request, message=self.success_message)
-		return super().delete(request, *args, **kwargs)
-
-	def test_func(self):
-		bike= self.get_object()
-
-		if bike.operatorid == self.request.user:
-			return True
-		return False
-
-
 '''Ratingadd - This class uses Ratings model and allows user to provide feedback, it requires user to be logged in, it uses feedback.html and redirects user to login page'''
 class Rettingadd(LoginRequiredMixin, CreateView):
 	model=Rating
@@ -223,43 +175,6 @@ class Rettingadd(LoginRequiredMixin, CreateView):
 	def form_valid(self, form):
 		messages.success(self.request, self.success_message)
 		return super().form_valid(form)
-
-
-'''AddStationView - This class based view is using MapsForm as form and it can be used to add new  bike station details, it uses add_station.html and redirects user to the same page'''
-class AddStationView(CreateView):
-	form_class = MapsForm
-	template_name = 'BikeUsers/add_station.html'
-	success_url = reverse_lazy('AddStation')
-	success_message = 'Station Details Added Successfully!'
-
-	def form_valid(self, form):
-		messages.success(self.request, self.success_message)
-		return super().form_valid(form)
-
-
-'''add_station - This function accepts ajax POST request and if the form is valid the details will be saved or else error message will be sent in JSON, if the request is not ajax then it returns empty form'''
-def add_station(request):
-	if request.is_ajax() and request.method == "POST":
-		up_form = MapsForm(data = request.POST)
-
-		#if both forms are valid, do something
-		if up_form.is_valid():
-			up_form.save()
-
-			result = "perfect"
-			message = "Station Details Added Successfully!"
-			context = {"result": result, "message": message}
-		else:
-			result = "error"
-			message = "Station Details Can't Be Added, Try again!"
-			context = {"result": result, "message": message}
-
-		return JsonResponse(context)
-
-	else:
-		up_form = MapsForm()
-		context = {'up_form':up_form}
-		return render(request, 'BikeUsers/add_station.html', context)
 
 
 '''bikeinfo - This function based view is used to show bikes of a particularly selected bike stations, it renders viewbike.html and also returns list of bikes along with station id'''

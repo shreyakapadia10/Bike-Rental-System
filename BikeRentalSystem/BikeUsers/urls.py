@@ -7,21 +7,18 @@ from .views import *
 urlpatterns = [
     path('', view=home, name='CustomerHome'), # Home Page
     path('register/', view=SignUpView.as_view(), name='CustomerRegister'), # User Registration
-    path('login/', view=SignIn.as_view(), name='CustomerLogin'), # User Login
+    # path('login/', view=SignIn.as_view(), name='CustomerLogin'), # User Login
+    path('accounts/login/', view=SignIn.as_view(), name='CustomerLogin'), # User Login
     path('logout/', view=auth_view.LogoutView.as_view(template_name='BikeUsers/login.html'), name='CustomerLogout'), # User Logout
     path('update_customer/', CustomerUpdateView, name="ProfileUpdate"), # User Profile Update
     path('login_success/', login_success, name='login_success'),
 
-    path('add_station', view=add_station, name='AddStation'), # Add Bike Station 
-    path('addbike/', view=BikeAddView.as_view(), name='BikeRegister'), # Add Bike
-    path('bike/update/<int:pk>/', view=BikeUpdateView.as_view(), name='Bike-UpdateView'), # Update Bike
-    path('bike/delete/<int:pk>/', view=BikeDeleteView.as_view(), name='Bike-DeleteView'), # Delete Bike
-    path('viewbike/<int:pk>',bikeinfo), # View Available Bikes of Selected Station
     path('bike/<int:pk>/',view=Bikedetails.as_view(),name='ShowBikeDetails'), # Show Bike Details
     path('history/', view_bike_history, name='ViewBikeHistory'), # Bike Rent History Page
     path('payment/',view=MakePayment, name='Payment'), # Bike Payment Page
     path('check_bikes/', check_bikes, name='CheckBikes'), # Supporting function to check available bikes
-    
+    path('viewbike/<int:pk>/',bikeinfo, name='ViewBikes'), # View Available Bikes of Selected Station
+
     path('feedback/', view=Rettingadd.as_view(), name='BikeFeedback'), # Feedback Page
     
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='BikeUsers/password/password_reset.html'), name='password_reset'), # Password Reset Page

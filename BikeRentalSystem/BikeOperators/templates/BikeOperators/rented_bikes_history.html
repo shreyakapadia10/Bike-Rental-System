@@ -1,0 +1,48 @@
+{% extends 'BikeOperators/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+
+<!-- <div class="col-lg-12 grid-margin stretch-card"> -->
+<div class="card">
+  <div class="card-body">
+    {% if rentHistory %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped ">
+        <h3 class="text-center">Rented Bike History</h3>
+        <thead>
+          <tr class="text-center">
+            <th>Customer Name</th>
+            <th>From Date and Time</th>
+            <th>To Date and Time</th>
+            <th>Payment Amount</th>
+            <th>Bike Rented</th>
+            <th>Station</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for history in rentHistory %}
+          <tr class="text-center">
+            <td>{{history.customer.first_name}}</td>
+            <td>{{history.from_date_time}}</td>
+            <td>{{history.to_date_time}}</td>
+            <td>{{history.payment.amount}}</td>
+            <td>{{history.bike.bikename}}</td>
+            <td>{{history.station.name}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <h3 class="text-center">No Bike Rent History Available!</h3>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock js %}
