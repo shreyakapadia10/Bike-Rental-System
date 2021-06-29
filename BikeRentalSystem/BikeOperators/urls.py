@@ -9,4 +9,8 @@ urlpatterns = [
     path('payment_details/',view=paymentDetailsView,name='payment'),
     path('rentedBike_details/',view=rentedBikeView,name='rentedBike'),
     path('update_customer/', view=OperatorUpdateView, name='profileUpdate'),
+    path('available_bikes/',bikeinfo),
+    path('rented_bikes/',bikeinfo1),
+    
+    path('dashboard/', view=SignIn.as_view(), name='OperatorDashboard'),
 ]

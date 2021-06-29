@@ -2,9 +2,9 @@ from django.contrib import messages
 from BikeUsers.forms import CustomerUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from .models import *
 from BikeUsers.models import *
-
+from .models import *
+from .forms import *
 # Create your views here.
 
 
@@ -42,3 +42,15 @@ def OperatorUpdateView(request):
 
 	context={'form': form}
 	return render(request, 'BikeOperators/update_operator.html',context)
+
+	
+def bikeinfo(request):
+	#print(request.user.id)
+	bikes= bike.objects.filter(operatorid=request.user)
+
+	return render(request, 'BikeOperators/available_bikes.html',{'viewbike':bikes})
+
+
+def bikeinfo1(request):
+	bikes= bike.objects.filter(operatorid=request.user)
+	return render(request, 'BikeOperators/rented_bikes.html', {'viewbike': bikes }) 
