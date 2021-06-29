@@ -5,6 +5,7 @@ const data = JSON.parse(document.getElementById('data').textContent);
 let stations = JSON.parse(data)
 
 var pinInfobox;
+
 function loadMapScenario() {
 
     var pushpinInfos = [];
@@ -36,7 +37,7 @@ function loadMapScenario() {
 
 
     /* For autosuggest feature start  */
-    Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
+    Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function() {
         var options = {
             addressSuggestions: true,
             businessSuggestions: true,
@@ -48,6 +49,7 @@ function loadMapScenario() {
         var manager = new Microsoft.Maps.AutosuggestManager(options);
         manager.attachAutosuggest('#searchBox', '#searchBoxContainer', selectedSuggestion);
     });
+
     function selectedSuggestion(suggestionResult) {
         // map.entities.clear();
         map.setView({ bounds: suggestionResult.bestView });
@@ -71,7 +73,7 @@ function hideInfobox(e) {
 
 
 /* -----For search by pincode start----- */
-$(window).on('load', function () {
+$(window).on('load', function() {
     // const myMap = document.getElementById('myMap');
     // myMap.style.display = "none";
 
@@ -121,7 +123,7 @@ function getCookie(name) {
 
 
 /* -----Sending AJAX request to search for stations having given pincode start----- */
-$('#pinCodeForm').on('submit', function (e) {
+$('#pinCodeForm').on('submit', function(e) {
     e.preventDefault();
 
     $.ajax({
@@ -134,21 +136,20 @@ $('#pinCodeForm').on('submit', function (e) {
             dataType: "json",
         },
 
-        success: function (data) {
+        success: function(data) {
             output = "";
             document.getElementById('stationTable').style.display = "inline-table";
             if (data.stations == '') {
                 output += '<center><h3>Unable to fetch any station details for given pincode.</h3></center>';
-            }
-            else {
+            } else {
                 response = JSON.parse(data.stations);
-                
+
                 for (let i = 0; i < response.length; i++) {
                     output += `<tr scope='row'>
                     <td>${i + 1}</td>
                     <td>${response[i].fields.name}</td>
                     <td>${response[i].fields.post_code}</td>
-                    <td>${response[i].fields.address}</td>
+                    <td style='max-width: 300px'>${response[i].fields.address}</td>
                     <td><a href = 'get_map/${response[i].pk}' target='_blank'>Show Directions</a></td>
                     <td><a href = 'viewbike/${response[i].pk}' target='_blank'>Show Bikes</a></td>
                     </tr>`
@@ -157,7 +158,7 @@ $('#pinCodeForm').on('submit', function (e) {
             $('#tbody').html(output); /* response message */
         },
 
-        failure: function (data) {
+        failure: function(data) {
             $('#tbody').html(data); /* response message */
         }
     });
@@ -176,7 +177,7 @@ state.addEventListener('change', getCity);
 city.addEventListener('change', getStations);
 
 /* ----This function will fetch cities associated with the selected state start---- */
-function getCity(){
+function getCity() {
     $.ajax({
         type: "POST",
         url: URL1,
@@ -186,17 +187,17 @@ function getCity(){
             dataType: "json",
         },
 
-        success: function (data) {
+        success: function(data) {
             let output = "";
             response = JSON.parse(data.cities);
-            
+
             output += "<option selected>---------</option>";
             for (let i = 0; i < response.length; i++) {
                 let city_id = response[i].pk;
                 let city = response[i].fields.name;
                 output += `<option value='${city_id}'>${city}</option>`;
             }
-            $('#id_name').html(output);   
+            $('#id_name').html(output);
         }
     });
 }
@@ -205,7 +206,7 @@ function getCity(){
 
 
 /* ----This function will fetch cities associated with the selected city start---- */
-function getStations(){
+function getStations() {
     $.ajax({
         type: "POST",
         url: URL,
@@ -216,21 +217,20 @@ function getStations(){
             dataType: "json",
         },
 
-        success: function (data) {
+        success: function(data) {
             output = "";
             document.getElementById('stationTable').style.display = "inline-table";
             if (data.stations == '') {
                 output += '<center><h3>Unable to fetch any station details for selected city.</h3></center>';
-            }
-            else {
+            } else {
                 response = JSON.parse(data.stations);
-                
+
                 for (let i = 0; i < response.length; i++) {
                     output += `<tr scope='row'>
                     <td>${i + 1}</td>
                     <td>${response[i].fields.name}</td>
                     <td>${response[i].fields.post_code}</td>
-                    <td>${response[i].fields.address}</td>
+                    <td style='max-width: 300px'>${response[i].fields.address}</td>
                     <td><a href = 'get_map/${response[i].pk}' target='_blank'>Show Directions</a></td>
                     <td><a href = 'viewbike/${response[i].pk}' target='_blank'>Show Bikes</a></td>
                     </tr>`
@@ -239,7 +239,7 @@ function getStations(){
             $('#tbody').html(output); /* response message */
         },
 
-        failure: function (data) {
+        failure: function(data) {
             $('#tbody').html(data); /* response message */
         }
     })

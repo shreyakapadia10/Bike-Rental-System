@@ -14,7 +14,19 @@ function GetMap() {
     });
 
     //Request the user's location
-    navigator.geolocation.getCurrentPosition(function (position) {
+    // navigator.geolocation.getCurrentPosition(function (position) {
+    //     var loc = new Microsoft.Maps.Location(
+    //         position.coords.latitude,
+    //         position.coords.longitude);
+
+    //     //Add a pushpin at the user's location.
+    //     // var pin = new Microsoft.Maps.Pushpin(loc);
+    //     // map.entities.push(pin);
+
+    //     // //Center the map on the user's location.
+    //     return loc;
+    // });
+    map.setView({ center: navigator.geolocation.getCurrentPosition(function (position) {
         var loc = new Microsoft.Maps.Location(
             position.coords.latitude,
             position.coords.longitude);
@@ -24,8 +36,8 @@ function GetMap() {
         // map.entities.push(pin);
 
         // //Center the map on the user's location.
-        map.setView({ center: loc, zoom: 15 });
-    });
+        return loc;
+    }), zoom: 15 });
 
 
     //Load the directions module.

@@ -1,13 +1,10 @@
 from django import forms
-from .models import BikeRentHistory, City, Customer, State, Station, bike
+from .models import *
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from functools import partial
 
-
+'''User Registration Form'''
 class CustomerCreationForm(UserCreationForm):
-    first_name = forms.CharField(max_length=50, required=True, help_text='Enter your first name')
-    last_name = forms.CharField(max_length=50, required=True, help_text='Enter your last name')
-
     class Meta:
         model = Customer
         fields = ['role','first_name', 'last_name', 'username', 'contact', 'address', 'pincode', 'email', 'proof', 'state', 'city']
@@ -17,34 +14,7 @@ class CustomerCreationForm(UserCreationForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
-
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
-class BikeRegistrationForm(forms.ModelForm):
-    bike_manufactured_date = forms.DateField(widget=DateInput())
-    bike_image=forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
-    class Meta:
-        model = bike
-        exclude=['operatorid']
-        
-    def __init__(self, *args, **kwargs):
-        super(BikeRegistrationForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-        self.fields['bike_manufactured_date'].widget.attrs.update({'class': 'datepicker form-control'})
-    
-
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
-class BikeUpdateForm(forms.ModelForm):
-    bike_manufactured_date = forms.DateField(widget=DateInput())
-    class Meta:
-        model = bike
-        exclude=['operatorid']
-    def __init__(self, *args, **kwargs):
-        super(BikeUpdateForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-        self.fields['bike_manufactured_date'].widget.attrs.update({'class': 'datepicker form-control'})
-
+'''User Login Form'''
 class CustomerLoginForm(AuthenticationForm):
     username = forms.CharField(help_text='Enter your username', required=True)
 
@@ -58,12 +28,43 @@ class CustomerLoginForm(AuthenticationForm):
             visible.field.widget.attrs['class'] = 'form-control'
 
 
+'''Customer Change Form'''
 class CustomerChangeForm(UserChangeForm):
     class Meta:
         model = Customer
         exclude = ('status', )
 
 
+'''Add Bike Details Form'''
+DateInput = partial(forms.DateInput, {'class': 'datepicker', 'autocomplete': 'off'})
+class BikeRegistrationForm(forms.ModelForm):
+    bike_manufactured_date = forms.DateField(widget=DateInput())
+    class Meta:
+        model = bike
+        exclude=['operatorid']
+        
+    def __init__(self, *args, **kwargs):
+        super(BikeRegistrationForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+        self.fields['bike_manufactured_date'].widget.attrs.update({'class': 'datepicker form-control'})
+    
+
+'''Update Bike Form'''
+DateInput = partial(forms.DateInput, {'class': 'datepicker', 'autocomplete': 'off'})
+class BikeUpdateForm(forms.ModelForm):
+    bike_manufactured_date = forms.DateField(widget=DateInput())
+    class Meta:
+        model = bike
+        exclude=['operatorid']
+    def __init__(self, *args, **kwargs):
+        super(BikeUpdateForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+        self.fields['bike_manufactured_date'].widget.attrs.update({'class': 'datepicker form-control'})
+
+
+'''Add Station Form'''
 class MapsForm(forms.ModelForm):
     name = forms.CharField(max_length=100, required=True)
     address = forms.CharField(max_length=100, required=True)
@@ -82,6 +83,7 @@ class MapsForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
 
 
+'''Select City Form'''
 class CityForm(forms.ModelForm):
     CHOICES = (
         ("", "---------"),
@@ -95,13 +97,21 @@ class CityForm(forms.ModelForm):
         model = City
         fields = ['state', 'name']
 
-
+'''Customer Change Form'''
 class CustomerUpdateForm(UserChangeForm):
     class Meta:
+<<<<<<< HEAD
         model = Customer
         fields = ['role','first_name', 'last_name', 'username', 'contact', 'address', 'pincode', 'email', 'proof', 'state', 'city']
 
     def __init__(self, *args, **kwargs):
         super(CustomerCreationForm, self).__init__(*args, **kwargs)
+=======
+        model=Customer
+        fields = ['role','first_name', 'last_name', 'username', 'contact', 'address', 'pincode', 'email', 'proof', 'state', 'city']
+
+    def __init__(self, *args, **kwargs):
+        super(CustomerUpdateForm, self).__init__(*args, **kwargs)
+>>>>>>> bc83c375d15bd55317b9859ecea8debd83ee3ba0
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'

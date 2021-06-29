@@ -8,7 +8,7 @@
 
 <form class="row g-3 mt-2 needs-validation form-center" method="post" novalidate>
   {% csrf_token %}
-  <h1 class="text-center">Login!</h1>
+  <h1 class="text-center">Login Now!</h1>
   <div class="col-md-6">
 
     <!-- To print any error for form validation -->
@@ -42,10 +42,11 @@
       </div>
     </div>
     {% endfor %}
+    <div class="form-center mt-3">
+      <button class="btn btn-primary mb-2 " type="submit">Login Now</button>
+    </div>
     <p class="text-center mt-2">Don't have an account? <a href="{% url 'CustomerRegister' %}">Signup Now!</a></p>
-  </div>
-  <div class="form-center">
-    <button class="btn btn-primary mb-2 " type="submit">Submit</button>
+    <p class="text-center mt-2">Forgot Password? <a href="{% url 'password_reset' %}">Reset Your Password Here!</a></p>
   </div>
 </form>
 

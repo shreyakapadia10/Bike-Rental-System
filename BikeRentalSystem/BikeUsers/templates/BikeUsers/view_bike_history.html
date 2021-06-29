@@ -1,0 +1,32 @@
+{% extends 'BikeUsers/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+
+<div class="container mt-2">
+    <h1 class="text-center">Your Bike Rent History</h1>
+    {% if histories %}
+    {% for history in histories %}
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-3">
+                <img src="{{ history.bike.bike_image.url }}" class="img-fluid rounded-start" alt="{{ history.bike.bikename }}" height="200px" width="230px">
+            </div>
+            <div class="col-md-9">
+                <div class="card-body">
+                    <h4 class="card-title">Bike: {{ history.bike.bikename }}</h4>
+                    <p class="card-text">From: {{ history.from_date_time }}</p>
+                    <p class="card-text">To: {{ history.to_date_time }}</p>
+                    <p class="card-text"><strong>Paid: &#8377;{{history.payment.amount}} via {{ history.payment.get_mode_display }} on {{ history.payment.datetime }}</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h4 class="text-center mt-3">No Bike Rent History Found! <small><a href="{% url 'CustomerHome' %}"> Book Your Bike Here!</a></small> </h4>
+    {% endif %}
+</div>
+{% endblock content %}
