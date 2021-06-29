@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from PIL import Image
 
 # Create your models here.
 class State(models.Model):
@@ -62,7 +61,7 @@ class bike(models.Model):
     bike_manufactured_date=models.DateField(help_text='Add Manufactured date of bike')
     bikecolor = models.CharField(max_length=50, help_text='Enter bike color', verbose_name='Bike Color')
     bikestatus = models.CharField(choices=BIKE_STATUS_CHOICES, max_length=1, default='A', verbose_name='Select Bike Status')
-    station_id = models.ForeignKey(Station, on_delete=models.CASCADE, verbose_name='Select Station Location')
+    station_id = models.ForeignKey(Station, on_delete=models.CASCADE, verbose_name='Select Station Location', help_text='Select Station Location')
     
     def __str__(self) -> str:
         return f" {self.bikename} ({self.brandname})"

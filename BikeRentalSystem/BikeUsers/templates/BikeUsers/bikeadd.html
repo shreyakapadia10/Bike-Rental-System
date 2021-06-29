@@ -1,15 +1,15 @@
 {% extends 'BikeOperators/base.html' %}
 {% load static %}
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-   <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 {% endblock css %}
 {% block content %}
 
-<form class="row g-3 mt-2 needs-validation form-center" method="post" enctype="multipart/form-data" novalidate>
+<form class="mt-2 needs-validation" method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     <h1 class="text-center">Add/Update Bike Details</h1>
-    <div class="col-md-6">
+    <div class="col-md-12">
 
         <!-- To print any error for form validation -->
         {% if form.errors %} {% for field in form %} {% for error in field.errors %}
@@ -37,7 +37,7 @@
         {% endfor %}
     </div>
     <div class="form-center">
-        <button class="btn btn-primary mb-2 " type="submit">Submit</button>
+        <button class="btn btn-primary my-4 " type="submit">Submit</button>
     </div>
 </form>
 

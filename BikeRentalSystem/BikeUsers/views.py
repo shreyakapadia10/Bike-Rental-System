@@ -1,4 +1,5 @@
 # Necessary imports
+from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect, render
@@ -121,20 +122,27 @@ class SignUpView(CreateView):
 '''SignIn - This class based view is used for user login, it uses login.html and upon successful login it redirects to home page, also if the user is authenticated the it redirects user to home page automatically'''
 class SignIn(auth_view.LoginView):
 	form_class = CustomerLoginForm
-	success_url = reverse_lazy('CustomerHome')
+	# success_url = reverse_lazy('CustomerHome')
 	template_name = 'BikeUsers/login.html'
 	success_message = 'Logged in successfully!'
 	redirect_authenticated_user = True
 
 	def form_valid(self, form):
-		username = form.cleaned_data.get('username')
-		password = form.cleaned_data.get('password')
-		user = authenticate(self.request, username=username, password=password)
-		if user.role == 'O':
-			return redirect('OperatorDashboard')
 		messages.success(self.request, self.success_message)
 		return super().form_valid(form)
 
+
+'''login_success - This function based view redirects users based on whether they are Customer or Operator'''
+def login_success(request):
+	if request.user.is_authenticated:
+		# If user is a Customer
+		if request.user.role == 'C': 
+			return redirect('CustomerHome')
+		# If user is an Operator
+		else:
+			return redirect('OperatorDashboard')
+	else:
+		return redirect('CustomerLogin')
 
 '''CustomerUpdateView - This function based view is used to update user details, it requires the user to be logged in and if the form details are valid then it'll update user details and redirect user to Home page, it renders update_customer.html'''
 @login_required
@@ -158,8 +166,10 @@ class BikeAddView(LoginRequiredMixin, CreateView):
 	form_class = BikeRegistrationForm
 	success_url = reverse_lazy('BikeRegister')
 	template_name = 'BikeUsers/bikeadd.html'
+	success_message = 'Bike Details Added Successfully!'
 	def form_valid(self, form):
 		form.instance.operatorid = self.request.user
+		messages.success(self.request, self.success_message)
 		return super().form_valid(form)
 
 
@@ -169,9 +179,10 @@ class BikeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 	form_class = BikeUpdateForm
 	success_url = reverse_lazy('BikeRegister')
 	template_name = 'BikeUsers/bikeadd.html'
-
+	success_message = 'Bike Details Updated Successfully!'
 	def form_valid(self, form):
 		form.instance.operatorid = self.request.user
+		messages.success(self.request, self.success_message)
 		return super().form_valid(form)
 
 	def test_func(self):
@@ -219,6 +230,11 @@ class AddStationView(CreateView):
 	form_class = MapsForm
 	template_name = 'BikeUsers/add_station.html'
 	success_url = reverse_lazy('AddStation')
+	success_message = 'Station Details Added Successfully!'
+
+	def form_valid(self, form):
+		messages.success(self.request, self.success_message)
+		return super().form_valid(form)
 
 
 '''add_station - This function accepts ajax POST request and if the form is valid the details will be saved or else error message will be sent in JSON, if the request is not ajax then it returns empty form'''
@@ -250,7 +266,6 @@ def add_station(request):
 def bikeinfo(request, pk):
 	if request.user.is_authenticated:
 		bikes=bike.objects.filter(station_id=pk)
-		paginate_by = 2
 		return render(request, 'BikeUsers/viewbike.html', {'viewbike': bikes, 'station': pk })
 	return redirect('CustomerLogin')
 
