@@ -100,18 +100,10 @@ class CityForm(forms.ModelForm):
 '''Customer Change Form'''
 class CustomerUpdateForm(UserChangeForm):
     class Meta:
-<<<<<<< HEAD
         model = Customer
         fields = ['role','first_name', 'last_name', 'username', 'contact', 'address', 'pincode', 'email', 'proof', 'state', 'city']
 
     def __init__(self, *args, **kwargs):
         super(CustomerCreationForm, self).__init__(*args, **kwargs)
-=======
-        model=Customer
-        fields = ['role','first_name', 'last_name', 'username', 'contact', 'address', 'pincode', 'email', 'proof', 'state', 'city']
-
-    def __init__(self, *args, **kwargs):
-        super(CustomerUpdateForm, self).__init__(*args, **kwargs)
->>>>>>> bc83c375d15bd55317b9859ecea8debd83ee3ba0
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
