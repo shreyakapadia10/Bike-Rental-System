@@ -23,7 +23,7 @@ class BikeUpdateForm(forms.ModelForm):
     bike_manufactured_date = forms.DateField(widget=DateInput())
     class Meta:
         model = bike
-        exclude=['operatorid']
+        exclude=['operatorid', 'bikestatus']
     def __init__(self, *args, **kwargs):
         super(BikeUpdateForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():

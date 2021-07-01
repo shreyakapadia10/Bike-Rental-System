@@ -5,6 +5,9 @@ from django.contrib.auth.models import AbstractUser
 class State(models.Model):
     name = models.CharField(max_length=50)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self) -> str:
         return self.name
 
@@ -12,6 +15,8 @@ class State(models.Model):
 class City(models.Model):
     name = models.CharField(max_length=50)
     state = models.ForeignKey(to=State, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ['name']
 
     def __str__(self) -> str:
         return self.name 
@@ -37,13 +42,16 @@ class Customer(AbstractUser):
 
 
 class Station(models.Model):
-    name = models.CharField(verbose_name="Name",max_length=100, null=True, blank=True)
-    address = models.CharField(verbose_name="Address",max_length=500, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, help_text='Select your city')
-    post_code = models.CharField(verbose_name="Post Code",max_length=8, null=True, blank=True)
-    country = models.CharField(verbose_name="Country",max_length=100, null=True, blank=True)	
-    longitude = models.CharField(verbose_name="Longitude",max_length=50, null=True, blank=True)
-    latitude = models.CharField(verbose_name="Latitude",max_length=50, null=True, blank=True)
+    name = models.CharField(verbose_name="Name",max_length=100)
+    address = models.CharField(verbose_name="Address",max_length=500, unique=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, help_text='Select your city')
+    post_code = models.CharField(verbose_name="Post Code",max_length=8)
+    country = models.CharField(verbose_name="Country",max_length=100)	
+    longitude = models.CharField(verbose_name="Longitude", max_length=50)
+    latitude = models.CharField(verbose_name="Latitude", max_length=50)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self) -> str:
         return f'{self.name}, {self.city} ({self.post_code})'
@@ -56,7 +64,7 @@ class bike(models.Model):
     brandname = models.CharField(max_length=50, help_text='Enter bike brand name', verbose_name='Brand Name')
     price_hr = models.PositiveIntegerField(help_text='Enter bike price per hour', verbose_name='Price Per Hour')
     price_day = models.PositiveIntegerField(help_text='Enter bike price per day', null=True, verbose_name='Price Per Day')
-    registered_no = models.CharField(max_length=50, help_text='Enter bike registered number', verbose_name='Bike Registration Number')
+    registered_no = models.CharField(max_length=50, help_text='Enter bike registered number', verbose_name='Bike Registration Number', unique=True)
     bike_image=models.ImageField(upload_to='bike_image', help_text='Add bike image', null=True)
     bike_manufactured_date=models.DateField(help_text='Add Manufactured date of bike')
     bikecolor = models.CharField(max_length=50, help_text='Enter bike color', verbose_name='Bike Color')
@@ -68,8 +76,9 @@ class bike(models.Model):
 
 
 class Rating(models.Model):
-    suggestions=models.CharField(max_length=50, help_text='Enter your suggestion',default='Good')
+    suggestions=models.CharField(max_length=50, help_text='Enter your suggestion', default='Good')
     star = models.IntegerField(help_text='Add ratings')
+    bike = models.ForeignKey(bike, on_delete=models.CASCADE, help_text='Select Bike', default=None)
 
     def __str__(self):
         return f'{self.suggestions} - {self.star} stars'

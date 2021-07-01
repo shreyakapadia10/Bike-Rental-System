@@ -10,7 +10,7 @@ function loadMapScenario() {
 
     var pushpinInfos = [];
     for (let i = 0; i < stations.length; i++) {
-        pushpinInfos[i] = { 'lat': parseFloat(stations[i]['fields']['latitude']), 'lng': parseFloat(stations[i]['fields']['longitude']), 'title': stations[i]['fields']['name'], 'description': stations[i]['fields']['address'] + '(' + stations[i]['fields']['post_code'] + ')', 'icon': 'https://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Pink-icon.png' };
+        pushpinInfos[i] = { 'lat': parseFloat(stations[i]['fields']['latitude']), 'lng': parseFloat(stations[i]['fields']['longitude']), 'title': stations[i]['fields']['name'], 'description': stations[i]['fields']['address'] + '(' + stations[i]['fields']['post_code'] + ')', 'icon': 'https://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Pink-icon.png', 'station': stations[i]['pk'] };
     }
 
     var infoboxLayer = new Microsoft.Maps.EntityCollection();
@@ -26,7 +26,7 @@ function loadMapScenario() {
         locs[i] = new Microsoft.Maps.Location(pushpinInfos[i].lat, pushpinInfos[i].lng);
         var pin = new Microsoft.Maps.Pushpin(locs[i], { icon: pushpinInfos[i].icon, width: '30px', height: '30px' });
         pin.Title = pushpinInfos[i].title;
-        pin.Description = pushpinInfos[i].description;
+        pin.Description = `<a href='/viewbike/${pushpinInfos[i].station}'>View Bikes</a><br>` +  pushpinInfos[i].description ;
         pinLayer.push(pin);
         Microsoft.Maps.Events.addHandler(pin, 'click', displayInfobox);
     }
@@ -34,7 +34,6 @@ function loadMapScenario() {
     map.entities.push(infoboxLayer);
     var bestview = Microsoft.Maps.LocationRect.fromLocations(locs);
     map.setView({ center: bestview.center, zoom: 5 });
-
 
     /* For autosuggest feature start  */
     Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function() {

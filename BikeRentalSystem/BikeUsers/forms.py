@@ -1,6 +1,6 @@
 from django import forms
 from .models import *
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, PasswordChangeForm
 
 '''User Registration Form'''
 class CustomerCreationForm(UserCreationForm):
@@ -52,9 +52,18 @@ class CityForm(forms.ModelForm):
 class CustomerUpdateForm(UserChangeForm):
     class Meta:
         model = Customer
-        fields = ['role','first_name', 'last_name', 'username', 'contact', 'address', 'pincode', 'email', 'proof', 'state', 'city']
+        fields = ['first_name', 'last_name', 'username', 'contact', 'address', 'pincode', 'email', 'proof', 'state', 'city']
 
     def __init__(self, *args, **kwargs):
         super(CustomerUpdateForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+class PasswordUpdateForm(PasswordChangeForm):
+    class Meta:
+        model = Customer
+
+    def __init__(self, user, *args, **kwargs):
+        super(PasswordUpdateForm, self).__init__(user, *args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'

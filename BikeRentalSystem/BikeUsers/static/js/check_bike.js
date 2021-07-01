@@ -271,7 +271,7 @@ $('#MakePaymentBtn').on('click', function () {
             success: function (data) {
                 $('#PaymentModal').modal('hide');
                 alert(data.message);
-                location.reload();
+                window.location.href = '/history'
             },
             
             failure: function (data) {

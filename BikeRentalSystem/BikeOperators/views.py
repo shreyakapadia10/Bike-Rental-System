@@ -153,6 +153,7 @@ class AddStationView(CreateView):
 
 
 '''add_station - This function accepts ajax POST request and if the form is valid the details will be saved or else error message will be sent in JSON, if the request is not ajax then it returns empty form'''
+@login_required
 def add_station(request):
 	if request.is_ajax() and request.method == "POST":
 		up_form = MapsForm(data = request.POST)
@@ -178,6 +179,7 @@ def add_station(request):
 
 
 '''update_status - This function based view will update the status of bike to available or on rent'''
+@login_required
 def update_status(request):
 	if request.method == 'POST' and request.is_ajax():
 		bike_id = request.POST.get('id')

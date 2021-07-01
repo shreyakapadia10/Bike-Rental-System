@@ -20,6 +20,7 @@
                     <p class="card-text">From: {{ history.from_date_time }}</p>
                     <p class="card-text">To: {{ history.to_date_time }}</p>
                     <p class="card-text"><strong>Paid: &#8377;{{history.payment.amount}} via {{ history.payment.get_mode_display }} on {{ history.payment.datetime }}</strong></p>
+                    <a href="{% url 'BikeFeedback' history.bike.id %}" class="btn btn-md btn-success">Give Feedback</a>
                 </div>
             </div>
         </div>

@@ -19,7 +19,7 @@ urlpatterns = [
     path('check_bikes/', check_bikes, name='CheckBikes'), # Supporting function to check available bikes
     path('viewbike/<int:pk>/',bikeinfo, name='ViewBikes'), # View Available Bikes of Selected Station
 
-    path('feedback/', view=Rettingadd.as_view(), name='BikeFeedback'), # Feedback Page
+    path('feedback/<int:pk>/', view=Rettingadd, name='BikeFeedback'), # Feedback Page
     
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='BikeUsers/password/password_reset.html'), name='password_reset'), # Password Reset Page
 
@@ -29,6 +29,7 @@ urlpatterns = [
     
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='BikeUsers/password/password_reset_complete.html'),name='password_reset_complete'), # Password Complete Page
     
+    path('update_password/', view=PasswordChangeView, name='PasswordUpdate'), # To update password
 
     path('search_city/', view=search_city, name='SearchCity'), # Supporting function to get all citites of selected state
     path('search_station/', view=search_station, name='SearchStation'), # Supporting function to get all station names

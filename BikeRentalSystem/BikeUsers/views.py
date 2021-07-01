@@ -1,12 +1,13 @@
 # Necessary imports
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.api import success
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from django.contrib.auth import authenticate, login, views as auth_view
-from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, update_session_auth_hash, views as auth_view
+from django.http import JsonResponse, request
 from django.views.generic import DetailView
 from django.core.serializers import serialize
 from django.contrib.auth.decorators import login_required
@@ -34,6 +35,7 @@ def home(request):
 
 
 '''search_station function - This function accepts ajax request and will return list of stations based on whether the search is based on pincode or city, it returns JSON response'''
+@login_required
 def search_station(request):
 	if request.is_ajax():
 		is_pincode = request.POST.get('is_pincode', None)
@@ -77,6 +79,7 @@ def search_station(request):
 
 
 '''search_city - This function accepts ajax request and will return cities for the selected state in JSON format'''
+@login_required
 def search_city(request):
 	if request.is_ajax():
 		# getting data from state input
@@ -97,6 +100,7 @@ def search_city(request):
 
 
 '''get_map - This function gets id of particular station and renders get_map.html file, along with that it returns station details so that the direction to the station can be shown'''
+@login_required
 def get_map(request, pk):
 	station = Station.objects.get(id=pk)
 	station_json = serialize('json',[station])
@@ -136,6 +140,7 @@ class SignIn(auth_view.LoginView):
 
 
 '''login_success - This function based view redirects users based on whether they are Customer or Operator'''
+@login_required
 def login_success(request):
 	if request.user.is_authenticated:
 		# If user is a Customer
@@ -165,19 +170,27 @@ def CustomerUpdateView(request):
 
 
 '''Ratingadd - This class uses Ratings model and allows user to provide feedback, it requires user to be logged in, it uses feedback.html and redirects user to login page'''
-class Rettingadd(LoginRequiredMixin, CreateView):
-	model=Rating
-	fields = '__all__'
-	success_url = reverse_lazy('CustomerLogin')
-	template_name = 'BikeUsers/feedback.html'
-	success_message = 'Thank you for your valueable response!'
+@login_required
+def Rettingadd(request, pk):
+	if request.method=="POST":
+		star = request.POST.get('star')
+		suggestions = request.POST.get('suggestions')
 
-	def form_valid(self, form):
-		messages.success(self.request, self.success_message)
-		return super().form_valid(form)
-
+		if star is not None and suggestions != '':
+			try:
+				Bike = bike.objects.get(id=pk)
+				new_rating = Rating.objects.create(star=star, suggestions=suggestions, bike=Bike)
+				new_rating.save()
+				messages.success(request, 'Thank you for your valuable feedback!')
+				return redirect('ViewBikeHistory')
+			except:
+				return render(request,'BikeUsers/feedback.html')
+		else:
+			messages.warning(request, 'Please provide valid feedback!')
+	return render(request,'BikeUsers/feedback.html')
 
 '''bikeinfo - This function based view is used to show bikes of a particularly selected bike stations, it renders viewbike.html and also returns list of bikes along with station id'''
+@login_required
 def bikeinfo(request, pk):
 	if request.user.is_authenticated:
 		bikes=bike.objects.filter(station_id=pk)
@@ -192,6 +205,7 @@ class Bikedetails(DetailView):
 
 
 '''check_bikes - This function based views is used to provide a lits of available bikes based on user selected date and time duration, it accepts ajax request and returns JSON response, it requires user to be logged in'''
+@login_required
 def check_bikes(request):
 	if request.user.is_authenticated:
 		if request.is_ajax():
@@ -240,6 +254,7 @@ def check_bikes(request):
 
 
 '''MakePayment - This function based view accepts ajax request, it requires user to be logged in and saves payment details and bike history details and returns JSON response'''
+@login_required
 def MakePayment(request):
 	if request.user.is_authenticated:
 		if request.is_ajax():
@@ -285,6 +300,7 @@ def format_date(from_date, to_date, from_time, to_time):
 
 
 '''view_bike_history - This function based view is used to show bike rent history of the logged in user, it renders view_bike_history.html along with it, it returns all rented bikes. It requires the user to be logged in'''
+@login_required
 def view_bike_history(request):
 	if request.user.is_authenticated:
 		bike_rent_history = BikeRentHistory.objects.filter(customer=request.user)
@@ -292,3 +308,22 @@ def view_bike_history(request):
 		return render(request=request, template_name='BikeUsers/view_bike_history.html', context={'histories': bike_rent_history})
 
 	return redirect('CustomerLogin')
+
+
+'''PasswordChangeView'''
+@login_required
+def PasswordChangeView(request):
+	
+	if request.method == "POST":
+		form = PasswordUpdateForm(request.user, request.POST)
+
+		if form.is_valid():
+			user = form.save()
+			update_session_auth_hash(request, user)  # Important!
+			messages.success(request=request, message='Your password has been successfully updated!')
+			return redirect('CustomerHome')
+		else:
+			messages.warning(request=request, message='Please check your password!')
+
+	form = PasswordUpdateForm(request.user)
+	return render(request=request, template_name='BikeUsers/password_update.html', context={'form': form})

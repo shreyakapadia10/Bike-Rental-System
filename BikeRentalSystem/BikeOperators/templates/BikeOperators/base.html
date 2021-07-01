@@ -72,6 +72,12 @@
                 <i class="ti-user text-primary"></i>
                 Profile
               </a>
+
+              <a class="dropdown-item" href="{% url 'PasswordUpdate' %}">
+                <i class="ti-user text-primary"></i>
+                Update Password
+              </a>
+
               <a class="dropdown-item" href="{% url 'CustomerLogout' %}">
                 <i class="ti-power-off text-primary"></i>
                 Logout
@@ -175,6 +181,13 @@
             <a class="nav-link" href="{% url 'profileUpdate' %}">
               <i class="icon-head menu-icon"></i>
               <span class="menu-title">Update Profile</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'PasswordUpdate' %}">
+              <i class="mdi mdi-account-key menu-icon"></i>
+              <span class="menu-title">Update Password</span>
             </a>
           </li>
 

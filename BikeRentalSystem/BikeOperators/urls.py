@@ -8,6 +8,7 @@ urlpatterns = [
     path('payment_details/', view=payment_details,name='payment'), # Payment Details
     path('rent_history/', view=rent_history,name='rentedBike'), # Bike Rent History
     path('profile/', view=operator_profile, name='profileUpdate'), # Operator Profile
+    path('update_password/', view=PasswordChangeView, name='PasswordUpdate'), # To update password
     path('all_bikes/', all_bikes, name='AllBikes'), # All Bikes
     path('available_bikes/', available_bikes, name='AvailableBikes'), # Available Bikes
     path('rented_bikes/', rented_bikes, name='RentedBikes'), # Rented Bikes
