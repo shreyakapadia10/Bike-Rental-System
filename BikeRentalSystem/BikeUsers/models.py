@@ -79,7 +79,7 @@ class Rating(models.Model):
     suggestions=models.CharField(max_length=50, help_text='Enter your suggestion', default='Good')
     star = models.IntegerField(help_text='Add ratings')
     bike = models.ForeignKey(bike, on_delete=models.CASCADE, help_text='Select Bike', default=None)
-
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
     def __str__(self):
         return f'{self.suggestions} - {self.star} stars'
 

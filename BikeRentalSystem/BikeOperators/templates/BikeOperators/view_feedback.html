@@ -1,0 +1,42 @@
+{% extends 'BikeOperators/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+       {% if feedbacks %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped">
+                <h3 class="text-center">Bike Feedbacks</h3>
+                <thead>
+                    <tr class="text-center">
+                        <th>Bike Name</th>
+                        <th>Ratings</th>
+                        <th>Suggestions</th>
+                        <th>Given By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in feedbacks %}
+                    <tr class="text-center">
+                        <td>{{ f.bike.bikename }}</td>
+                        <td>{{ f.star }}</td>
+                        <td>{{ f.suggestions }}</td>
+                        <td>{{ f.customer.first_name }} {{ f.customer.last_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <h3 class="text-center">No Feedbacks available for the selected bike!</h3>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock js %}

@@ -17,4 +17,6 @@ urlpatterns = [
     path('add_bike/', view=BikeAddView.as_view(), name='BikeRegister'), # Add Bike
     path('bike/update/<int:pk>/', view=BikeUpdateView.as_view(), name='BikeUpdateView'), # Update Bike
     path('bike/delete/<int:pk>/', view=BikeDeleteView.as_view(), name='BikeDeleteView'), # Delete Bike
+    path('feedback/<int:pk>/', view=BikeFeedbackView, name='BikeFeedbackView'), # Delete Bike
+    path('feedback/', view=BikeFeedbackView, name='BikeFeedbackView'), # Delete Bike
 ]

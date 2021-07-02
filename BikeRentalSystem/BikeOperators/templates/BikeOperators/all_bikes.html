@@ -32,7 +32,9 @@
                         <td>{{ b.registered_no }}</td>
                         <td>{{ b.bikecolor }}</td>
                         <td>{{ b.get_bikestatus_display }}</td>
-                        <td><a href="{% url 'BikeUpdateView' b.id %}" class="btn btn-warning mr-2">Update</a>
+                        <td>
+                            <a href="{% url 'BikeFeedbackView' b.id %}" class="btn btn-success mr-2">View Feedbacks</a>
+                            <a href="{% url 'BikeUpdateView' b.id %}" class="btn btn-warning mr-2">Update</a>
                             <a href="{% url 'BikeDeleteView' b.id %}" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>

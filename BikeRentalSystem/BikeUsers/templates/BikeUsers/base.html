@@ -13,9 +13,9 @@
     <title>Bike Rental System</title>
 </head>
 
-<img id="loading" alt="Loading..." src="{% static 'images/loading.gif' %}" />
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <img id="loading" alt="Loading..." src="{% static 'images/loading.gif' %}" />
+    <nav class="navbar navbar-expand-lg navbar-light bg-light my-loader">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'CustomerHome' %}">
                 <img src="{% static 'images/logo.jpg' %}" alt="Bike Rental System" width="30" height="24" class="d-inline-block align-text-top"> BikeRentalSystem
@@ -66,7 +66,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container my-loader">
         {% if messages %} {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-2" role="alert">
             <strong>{{ message }}</strong>
@@ -76,11 +76,12 @@
     </div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
-        $(document.body).css("opacity", 0);
-        $(document).ready(function() {
+        $('.my-loader').css("opacity", 0);
+        $(document).ready(function () {
             $("#loading").hide();
-            $(document.body).css("opacity", 1);
+            $('.my-loader').css("opacity", 1);
         });
+        
     </script>
 
     {% block js %} {% endblock js %}

@@ -5,7 +5,7 @@ from django.urls.base import reverse_lazy
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from BikeUsers.forms import *
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from BikeUsers.models import *
 from .models import *
 from .forms import *
@@ -198,3 +198,19 @@ def update_status(request):
 		return JsonResponse(response)
 	else:
 		return redirect('RentedBikes')
+
+
+'''BikeFeedbackView - This view is used to show either all the feedbacks of given bike or feedback of the selected bike'''
+@login_required
+def BikeFeedbackView(request, pk=None):
+	Bike = None
+	feedbacks = None
+
+	if pk != None:
+		Bike = bike.objects.get(id=pk, operatorid=request.user)
+		feedbacks = Rating.objects.filter(bike=Bike)
+	else: 
+		Bike = bike.objects.all().filter(operatorid=request.user)
+		feedbacks = Rating.objects.filter(bike__id__in=Bike)
+
+	return render(request=request, template_name='BikeOperators/view_feedback.html', context={'feedbacks': feedbacks})

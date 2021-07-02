@@ -35,9 +35,9 @@
 
 </head>
 
-<img id="loading" alt="Loading..." src="{% static 'images/loading.gif' %}" />
 <body>
-  <div class="container-scroller">
+  <img id="loading" alt="Loading..." src="{% static 'images/loading.gif' %}" />
+  <div class="container-scroller my-loader">
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class=" navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -163,9 +163,9 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'payment' %}">
-              <i class="icon-paper menu-icon"></i>
-              <span class="menu-title">Payment Details</span>
+            <a class="nav-link" href="{% url 'BikeFeedbackView' %}">
+              <i class="mdi mdi-file-document-box menu-icon"></i>
+              <span class="menu-title">Bike Feedbacks</span>
             </a>
           </li>
 
@@ -176,6 +176,12 @@
             </a>
           </li>
 
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'payment' %}">
+              <i class="icon-paper menu-icon"></i>
+              <span class="menu-title">Payment Details</span>
+            </a>
+          </li>
 
           <li class="nav-item">
             <a class="nav-link" href="{% url 'profileUpdate' %}">
@@ -227,10 +233,10 @@
   <!-- container-scroller -->
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="text/javascript">
-    $(document.body).css("opacity", 0);
+    $('.my-loader').css("opacity", 0);
     $(document).ready(function () {
       $("#loading").hide();
-      $(document.body).css("opacity", 1);
+      $('.my-loader').css("opacity", 1);
     });
   </script>
   <!-- plugins:js -->

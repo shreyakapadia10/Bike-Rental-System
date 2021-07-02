@@ -179,7 +179,7 @@ def Rettingadd(request, pk):
 		if star is not None and suggestions != '':
 			try:
 				Bike = bike.objects.get(id=pk)
-				new_rating = Rating.objects.create(star=star, suggestions=suggestions, bike=Bike)
+				new_rating = Rating.objects.create(star=star, suggestions=suggestions, bike=Bike, customer=request.user)
 				new_rating.save()
 				messages.success(request, 'Thank you for your valuable feedback!')
 				return redirect('ViewBikeHistory')
@@ -326,4 +326,6 @@ def PasswordChangeView(request):
 			messages.warning(request=request, message='Please check your password!')
 
 	form = PasswordUpdateForm(request.user)
-	return render(request=request, template_name='BikeUsers/password_update.html', context={'form': form})
+	if request.user.role == 'C':
+		return render(request=request, template_name='BikeUsers/password_update.html', context={'form': form})
+	return render(request=request, template_name='BikeOperators/password_update.html', context={'form': form})
